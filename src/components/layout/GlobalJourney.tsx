@@ -1,11 +1,31 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Flame, ArrowRight, X } from 'lucide-react';
+import { getSearchHistory } from '@/lib/demoSession';
 
 export default function GlobalJourney() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [searches, setSearches] = useState<Array<{query:string; at:string}>>(() => {
+    try {
+      return getSearchHistory().slice(0, 8);
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    const onSearch = (e: Event) => {
+      try {
+        const detail = (e as CustomEvent)?.detail as { query: string; at: string } | undefined;
+        if (detail) setSearches((s) => [detail, ...s].slice(0, 8));
+      } catch {}
+    };
+
+    window.addEventListener('animestop:search', onSearch as EventListener);
+    return () => window.removeEventListener('animestop:search', onSearch as EventListener);
+  }, []);
 
   // Journey data (demo - could be from context/store in production)
   const currentAnime = 'One Piece';
@@ -110,13 +130,7 @@ export default function GlobalJourney() {
                 </button>
               </div>
 
-              {/* Continue exploring text */}
-              <p 
-                className="text-sm mb-2"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                Continue exploring
-              </p>
+              {/* 'Continue exploring' removed as requested */}
 
               {/* Current anime link */}
               <Link
@@ -147,70 +161,43 @@ export default function GlobalJourney() {
                 ))}
               </div>
 
-              {/* Recent Activity / Chapters */}
+              {/* Search Tracker (shows when user has searches) */}
               <div className="mb-8">
                 <h3 
-                  className="text-xs font-semibold uppercase tracking-wider mb-4"
-                  style={{ color: 'var(--text-muted)' }}
-                >
-                  Recent Activity
-                </h3>
-                <div className="space-y-3">
-                  <Link
-                    href="/stories/one-piece/chapter-1"
-                    className="block p-3 rounded-lg transition-colors hover:bg-[var(--elevated-bg)] group"
-                    onClick={() => setIsExpanded(false)}
+                    className="text-xs font-semibold uppercase tracking-wider mb-4"
+                    style={{ color: 'var(--text-muted)' }}
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <p 
-                          className="text-sm font-medium mb-1 group-hover:text-[var(--accent-orange)]"
-                          style={{ color: 'var(--text-primary)' }}
-                        >
-                          Romance Dawn
-                        </p>
-                        <p 
-                          className="text-xs"
-                          style={{ color: 'var(--text-muted)' }}
-                        >
-                          Chapter 1 • Started
-                        </p>
-                      </div>
-                      <ArrowRight 
-                        className="w-4 h-4 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" 
-                        style={{ color: 'var(--accent-orange)' }}
-                        strokeWidth={2}
-                      />
-                    </div>
-                  </Link>
+                    Recent Searches
+                  </h3>
 
-                  <Link
-                    href="/stories/demon-slayer"
-                    className="block p-3 rounded-lg transition-colors hover:bg-[var(--elevated-bg)] group"
-                    onClick={() => setIsExpanded(false)}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <p 
-                          className="text-sm font-medium mb-1 group-hover:text-[var(--accent-orange)]"
-                          style={{ color: 'var(--text-primary)' }}
-                        >
-                          Demon Slayer
-                        </p>
-                        <p 
-                          className="text-xs"
-                          style={{ color: 'var(--text-muted)' }}
-                        >
-                          Collection • 3 items
-                        </p>
-                      </div>
-                      <ArrowRight 
-                        className="w-4 h-4 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" 
-                        style={{ color: 'var(--accent-orange)' }}
-                        strokeWidth={2}
+                  {/* Orange dashed progress line — visible when there are searches */}
+                  {searches.length > 0 && (
+                    <div className="journey-search-line-wrapper">
+                      <div
+                        className="journey-search-line"
+                        style={{
+                          // scale from 0 to 1 depending on number of searches (max 8)
+                          ['--search-scale' as unknown as string]: Math.min(1, searches.length / 8).toString(),
+                        } as React.CSSProperties}
+                        aria-hidden
                       />
                     </div>
-                  </Link>
+                  )}
+                <div className="space-y-3">
+                  {searches.length === 0 && (
+                    <div className="text-xs text-[var(--text-muted)]">No recent searches</div>
+                  )}
+                  {searches.map((s, idx) => (
+                    <div key={idx} className="p-3 rounded-lg transition-colors bg-transparent" onClick={() => setIsExpanded(false)}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>{s.query}</p>
+                          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{new Date(s.at).toLocaleString()}</p>
+                        </div>
+                        <ArrowRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--accent-orange)' }} strokeWidth={2} />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -243,3 +230,4 @@ export default function GlobalJourney() {
     </>
   );
 }
+

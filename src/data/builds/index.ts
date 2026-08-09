@@ -75,6 +75,39 @@ const mapProduct = (p: ProductDetail, category: BuildDetail['category']): BuildD
     image: p.image || undefined,
     imageAlt: p.imageAlt || p.title,
     gallery: p.image ? [{ src: p.image, alt: p.imageAlt || p.title }] : undefined,
+    // Ensure a normalized media array for the universal product viewer.
+    media: ((): BuildMediaItem[] | undefined => {
+      // If the original product explicitly includes a gallery, map it.
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      const maybeGallery = (p as any).gallery;
+      if (Array.isArray(maybeGallery) && maybeGallery.length) {
+        return maybeGallery.map((g: any, idx: number) => ({
+          id: g.id || `img-${idx}`,
+          type: 'image' as const,
+          label: g.alt || `Image ${idx + 1}`,
+          src: g.src,
+          alt: g.alt,
+          view: idx === 0 ? 'front' : 'detail',
+        }));
+      }
+      /* eslint-enable @typescript-eslint/no-explicit-any */
+
+      // Fallback to single front image when available
+      if (p.image) {
+        return [
+          {
+            id: 'front',
+            type: 'image',
+            label: 'Front',
+            src: p.image,
+            alt: p.imageAlt || p.title,
+            view: 'front',
+          },
+        ];
+      }
+
+      return undefined;
+    })(),
     storyParagraphs: [p.fullDescription, p.inspiration || ''].filter(Boolean),
     storyImage: undefined,
     storyImageAlt: p.title,

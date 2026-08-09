@@ -29,13 +29,7 @@ export default function NewsletterSection() {
   return (
     <section className="py-16 lg:py-20" style={{ backgroundColor: 'var(--page-bg)' }}>
       <Container size="large">
-        <div 
-          className="newsletter-panel relative overflow-hidden rounded-2xl p-8 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-8"
-          style={{
-            backgroundColor: 'rgba(15, 15, 20, 0.6)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-          }}
-        >
+        <div className="newsletter-panel relative overflow-hidden rounded-2xl p-8 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-8">
           {/* Envelope Icon */}
           <div className="absolute top-8 left-8 opacity-10">
             <Send className="w-24 h-24 lg:w-32 lg:h-32" style={{ color: 'var(--text-primary)' }} />
@@ -70,12 +64,7 @@ export default function NewsletterSection() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full px-6 py-3 rounded-lg transition-all focus:outline-none focus:ring-2"
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: 'var(--text-primary)',
-                  }}
+                  className="w-full px-6 py-3 rounded-lg transition-all focus:outline-none focus:ring-2 newsletter-input"
                   required
                 />
                 {status === 'idle' && (
@@ -89,11 +78,7 @@ export default function NewsletterSection() {
               </div>
               <button
                 type="submit"
-                className="px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
-                style={{
-                  backgroundColor: 'var(--accent-orange)',
-                  color: 'var(--text-primary)',
-                }}
+                className="px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 newsletter-submit"
               >
                 Join the Journey
                 <Send className="w-4 h-4" />

@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
+import { getDemoUser } from '@/lib/demoSession';
 import { siteNavigation } from '@/data/navigation';
 
 interface MobileNavigationProps {
@@ -16,6 +17,7 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -40,6 +42,14 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
       document.body.style.paddingRight = '';
     };
   }, [isOpen]);
+
+  // Detect mobile vs desktop for drawer content
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 899);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // Focus management
   useEffect(() => {
@@ -142,23 +152,35 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
 
         <nav className="navigation-drawer-nav" aria-label="Main navigation">
           <ul className="navigation-drawer-list">
-            {siteNavigation.map((item) => {
+            {(isMobile ? siteNavigation : siteNavigation.filter(i => ['home','about','login'].includes(i.id))).map((item) => {
               const active = isActive(item.href);
+                // If this is the login entry, adapt label/href when demo user exists
+                let href = item.href;
+                let label = item.label;
+                try {
+                  const user = getDemoUser();
+                  if (item.id === 'login' && user) {
+                    href = '/account';
+                    label = 'Account';
+                  }
+                } catch {
+                  // ignore
+                }
               
               return (
                 <li key={item.id}>
-                  <Link
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavigation(item.href);
-                    }}
-                    className="navigation-drawer-link"
-                    data-current={active}
-                    aria-current={active ? 'page' : undefined}
-                  >
-                    {item.label}
-                  </Link>
+                    <Link
+                      href={href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleNavigation(href);
+                      }}
+                      className="navigation-drawer-link"
+                      data-current={active}
+                      aria-current={active ? 'page' : undefined}
+                    >
+                      {label}
+                    </Link>
                 </li>
               );
             })}

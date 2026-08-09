@@ -10,8 +10,7 @@ export const siteNavigation: SiteNavigationItem[] = [
   { id: 'essentials', label: 'Essentials', href: '/essentials' },
   { id: 'possibilities', label: 'Possibilities', href: '/possibilities' },
   { id: 'vault', label: 'Vault', href: '/vault' },
-  { id: 'journal', label: 'Journal', href: '/journal' },
-  { id: 'circle', label: 'circle', href: '/circle' },
+  
   { id: 'about', label: 'About Us', href: '/about' },
   { id: 'login', label: 'Login', href: '/login' },
 ];

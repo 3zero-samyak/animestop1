@@ -42,13 +42,7 @@ export default function YourJourneyCard() {
         Your Journey
       </h2>
 
-      {/* Continue exploring text */}
-      <p 
-        className="text-sm mb-2"
-        style={{ color: 'var(--text-muted)' }}
-      >
-        Continue exploring
-      </p>
+      {/* 'Continue exploring' removed per request */}
 
       {/* Current anime link */}
       <Link

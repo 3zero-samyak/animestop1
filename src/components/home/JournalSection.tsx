@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 const articles = [
   {
@@ -78,10 +79,10 @@ export default function JournalSection() {
         </div>
         
         {/* Read All Button */}
-        <button className="journal-all-link">
+        <Link href="/journal" className="journal-all-link">
           <span className="text-sm font-medium">Read All Articles</span>
           <ArrowRight className="w-4 h-4" />
-        </button>
+        </Link>
       </div>
     </article>
   );

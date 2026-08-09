@@ -1,42 +1,23 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Search, X, Menu } from 'lucide-react';
 import MobileNavigation from './MobileNavigation';
 import ModeToggle from '@/components/mode/ModeToggle';
+import DesktopNavigation from './DesktopNavigation';
+import { getDemoUser, addSearchQuery } from '@/lib/demoSession';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showCompactHeader, setShowCompactHeader] = useState(false);
   
   const searchRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Scroll detection with hysteresis
-  useEffect(() => {
-    const SHOW_COMPACT_AT = 110;
-    const HIDE_COMPACT_AT = 70;
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-
-      if (!showCompactHeader && scrollY >= SHOW_COMPACT_AT) {
-        setShowCompactHeader(true);
-      } else if (showCompactHeader && scrollY <= HIDE_COMPACT_AT) {
-        setShowCompactHeader(false);
-      }
-    };
-
-    // Check initial scroll position (for restored scroll on page load)
-    handleScroll();
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [showCompactHeader]);
+  // single persistent header - no scroll-based swapping
 
   // Close search when clicking outside
   useEffect(() => {
@@ -88,6 +69,11 @@ export default function Header() {
     e.preventDefault();
     // Search functionality placeholder
     if (searchQuery.trim()) {
+      // Record search for demo user tracking
+      try {
+        const user = getDemoUser();
+        if (user) addSearchQuery(searchQuery.trim());
+      } catch {}
       console.log('Search query:', searchQuery);
     }
   };
@@ -97,7 +83,7 @@ export default function Header() {
   };
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen((s) => !s);
   };
 
   const closeMenu = () => {
@@ -106,8 +92,7 @@ export default function Header() {
 
   return (
     <>
-      {/* Expanded Header */}
-      <header className="site-header" data-compact-active={showCompactHeader}>
+      <header className="site-header">
         <div className="site-header-inner">
           {/* Brand Logo */}
           <Link href="/" className="site-brand">
@@ -120,6 +105,9 @@ export default function Header() {
               Built by anime fans. For anime fans.
             </span>
           </Link>
+
+          {/* Primary Navigation (center) */}
+          <DesktopNavigation />
 
           {/* Right Actions */}
           <div className="site-header-actions">
@@ -182,38 +170,6 @@ export default function Header() {
             </button>
 
             {/* Mode Toggle */}
-            <ModeToggle />
-          </div>
-        </div>
-      </header>
-
-      {/* Compact Header */}
-      <header className="compact-header" data-visible={showCompactHeader}>
-        <div className="compact-header-inner">
-          {/* Menu Button */}
-          <button
-            type="button"
-            className="compact-header-menu"
-            aria-label="Open navigation menu"
-            aria-expanded={menuOpen}
-            aria-controls="global-navigation-drawer"
-            onClick={toggleMenu}
-          >
-            <Menu aria-hidden="true" />
-          </button>
-
-          {/* Brand */}
-          <Link href="/" className="compact-header-brand" aria-label="AnimeStop home">
-            <span>ANIME</span>
-            <span>STOP</span>
-          </Link>
-
-          {/* Right Actions */}
-          <div className="compact-header-actions">
-            <Link href="/contact" className="compact-header-enquire">
-              Enquire
-            </Link>
-
             <ModeToggle />
           </div>
         </div>

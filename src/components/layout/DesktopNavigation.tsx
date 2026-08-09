@@ -20,7 +20,7 @@ export default function DesktopNavigation() {
   );
 
   return (
-    <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
+    <nav className="site-primary-nav" aria-label="Main navigation">
       {desktopNavItems.map((item) => {
         const active = isActive(item.href);
         
@@ -37,47 +37,6 @@ export default function DesktopNavigation() {
           </Link>
         );
       })}
-      
-      <style jsx>{`
-        .nav-link {
-          color: var(--text-muted);
-          display: inline-block;
-          padding-bottom: 8px; /* reserve space so underline doesn't overlap text */
-        }
-        
-        .nav-link:hover,
-        .nav-link[aria-current="page"] {
-          color: var(--text-primary);
-        }
-        
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: -10px;
-          height: 2px;
-          border-radius: 9999px;
-          transform: scaleX(0);
-          transform-origin: left;
-          will-change: transform;
-          z-index: 0;
-          background: linear-gradient(90deg, var(--accent-orange) 0%, var(--accent-red) 100%);
-          transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        /* reveal underline left-to-right on hover or keyboard focus */
-        .nav-link:hover::after,
-        .nav-link:focus-visible::after {
-          transform: scaleX(1);
-        }
-        
-        .nav-link:focus-visible {
-          outline: 2px solid var(--accent-orange);
-          outline-offset: 4px;
-          border-radius: 2px;
-        }
-      `}</style>
     </nav>
   );
 }

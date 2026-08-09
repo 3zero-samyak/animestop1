@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import GlobalJourney from "@/components/layout/GlobalJourney";
+import Script from 'next/script';
 import { ModeProvider } from "@/components/mode/ModeProvider";
 
 const inter = Inter({
@@ -28,21 +29,17 @@ export default function RootLayout({
       data-display-mode="anime"
     >
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var stored = localStorage.getItem('animestop-display-mode');
-                  var mode = (stored === 'manga' || stored === 'anime') ? stored : 'anime';
-                  document.documentElement.dataset.displayMode = mode;
-                } catch (e) {
-                  document.documentElement.dataset.displayMode = 'anime';
-                }
-              })();
-            `,
-          }}
-        />
+        <Script id="animestop-display-mode" strategy="beforeInteractive">
+          {`(function() {
+              try {
+                var stored = localStorage.getItem('animestop-display-mode');
+                var mode = (stored === 'manga' || stored === 'anime') ? stored : 'anime';
+                document.documentElement.dataset.displayMode = mode;
+              } catch (e) {
+                document.documentElement.dataset.displayMode = 'anime';
+              }
+            })();`}
+        </Script>
       </head>
       <body>
         <ModeProvider>
