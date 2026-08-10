@@ -38,7 +38,7 @@ export default function GlobalJourney() {
       {!isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
-          className="fixed right-6 bottom-6 lg:right-8 lg:bottom-8 flex items-center gap-3 px-4 py-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_30px_rgb(220,101,52,0.4)] group"
+          className="global-journey-toggle fixed right-6 bottom-6 lg:right-8 lg:bottom-8 flex items-center gap-3 px-4 py-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_30px_rgb(220,101,52,0.4)] group"
           style={{
             backgroundColor: 'var(--card-bg)',
             border: '1px solid var(--border-card)',
@@ -63,7 +63,7 @@ export default function GlobalJourney() {
 
           {/* Text - Hidden on small mobile */}
           <span 
-            className="hidden sm:inline-block text-sm font-medium whitespace-nowrap"
+            className="your-journey-label hidden sm:inline-block text-sm font-medium whitespace-nowrap"
             style={{ color: 'var(--text-primary)' }}
           >
             Your Journey
