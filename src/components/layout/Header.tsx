@@ -94,6 +94,19 @@ export default function Header() {
     <>
       <header className="site-header">
         <div className="site-header-inner">
+          {/* Menu Button (left on mobile) */}
+          <button
+            ref={menuButtonRef}
+            type="button"
+            className="site-header-icon-button site-header-menu-button"
+            onClick={toggleMenu}
+            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={menuOpen}
+            aria-controls="global-navigation-drawer"
+          >
+            {menuOpen ? <X /> : <Menu />}
+          </button>
+
           {/* Brand Logo */}
           <Link href="/" className="site-brand">
             <span className="site-brand-name">
@@ -157,18 +170,6 @@ export default function Header() {
             </div>
 
             {/* Menu Button */}
-            <button
-              ref={menuButtonRef}
-              type="button"
-              className="site-header-icon-button"
-              onClick={toggleMenu}
-              aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={menuOpen}
-              aria-controls="global-navigation-drawer"
-            >
-              {menuOpen ? <X /> : <Menu />}
-            </button>
-
             {/* Mode Toggle */}
             <ModeToggle />
           </div>
