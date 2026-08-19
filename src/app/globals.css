@@ -5900,6 +5900,24 @@ html[data-display-mode="anime"] .site-brand-stop {
   }
 }
 
+/* Refine icon button look on mobile to avoid boxy squares */
+@media (max-width: 768px) {
+  .site-header-icon-button {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+    padding: 0;
+    border-radius: 999px;
+    background: transparent;
+    border-color: rgba(255,255,255,0.06);
+    box-shadow: none;
+  }
+
+  html[data-display-mode="anime"] .site-header-icon-button {
+    background: rgba(8,9,12,0.6);
+  }
+}
+
 .site-header-icon-button svg {
   width: 24px;
   height: 24px;
