@@ -4,6 +4,7 @@ import "./globals.css";
 import GlobalJourney from "@/components/layout/GlobalJourney";
 import Script from 'next/script';
 import { ModeProvider } from "@/components/mode/ModeProvider";
+import { AuthProvider } from "@/lib/AuthProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,10 +43,12 @@ export default function RootLayout({
         </Script>
       </head>
       <body>
-        <ModeProvider>
-          {children}
-          <GlobalJourney />
-        </ModeProvider>
+        <AuthProvider>
+          <ModeProvider>
+            {children}
+            <GlobalJourney />
+          </ModeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

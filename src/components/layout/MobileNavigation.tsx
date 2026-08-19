@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
-import { getDemoUser } from '@/lib/demoSession';
+import { useAuth } from '@/lib/AuthProvider';
 import { siteNavigation } from '@/data/navigation';
 
 interface MobileNavigationProps {
@@ -13,6 +13,7 @@ interface MobileNavigationProps {
 }
 
 export default function MobileNavigation({ isOpen, onClose }: MobileNavigationProps) {
+  const { user, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -154,17 +155,13 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
           <ul className="navigation-drawer-list">
             {(isMobile ? siteNavigation : siteNavigation.filter(i => ['home','about','login'].includes(i.id))).map((item) => {
               const active = isActive(item.href);
-                // If this is the login entry, adapt label/href when demo user exists
+                // If this is the login entry, adapt label/href when user is authenticated
                 let href = item.href;
                 let label = item.label;
-                try {
-                  const user = getDemoUser();
-                  if (item.id === 'login' && user) {
-                    href = '/account';
-                    label = 'Account';
-                  }
-                } catch {
-                  // ignore
+                
+                if (item.id === 'login' && user) {
+                  href = '/account';
+                  label = 'Account';
                 }
               
               return (
@@ -184,6 +181,26 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
                 </li>
               );
             })}
+            {user && (
+              <li>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await logout();
+                      onClose();
+                      router.push('/');
+                    } catch (err) {
+                      console.error('Logout error:', err);
+                    }
+                  }}
+                  className="navigation-drawer-link"
+                  style={{ width: '100%', textAlign: 'left' }}
+                >
+                  Logout
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
       </aside>

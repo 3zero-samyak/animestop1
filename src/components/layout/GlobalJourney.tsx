@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Flame, ArrowRight, X } from 'lucide-react';
-import { getSearchHistory } from '@/lib/demoSession';
+import { getSearchHistory } from '@/lib/searchHistory';
 
 export default function GlobalJourney() {
   const [isExpanded, setIsExpanded] = useState(false);

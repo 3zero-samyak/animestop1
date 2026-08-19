@@ -6,9 +6,11 @@ import { Search, X, Menu } from 'lucide-react';
 import MobileNavigation from './MobileNavigation';
 import ModeToggle from '@/components/mode/ModeToggle';
 import DesktopNavigation from './DesktopNavigation';
-import { getDemoUser, addSearchQuery } from '@/lib/demoSession';
+import { useAuth } from '@/lib/AuthProvider';
+import { addSearchQuery } from '@/lib/searchHistory';
 
 export default function Header() {
+  const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,9 +71,8 @@ export default function Header() {
     e.preventDefault();
     // Search functionality placeholder
     if (searchQuery.trim()) {
-      // Record search for demo user tracking
+      // Record search for user tracking
       try {
-        const user = getDemoUser();
         if (user) addSearchQuery(searchQuery.trim());
       } catch {}
       console.log('Search query:', searchQuery);

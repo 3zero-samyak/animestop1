@@ -1,32 +1,5 @@
-// Client-only demo session helpers
-export type DemoUser = {
-  name?: string;
-  email: string;
-};
-
-const KEY = 'animestop-demo-user';
-
-export function getDemoUser(): DemoUser | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as DemoUser;
-  } catch {
-    return null;
-  }
-}
-
-export function setDemoUser(user: DemoUser) {
-  if (typeof window === 'undefined') return;
-  const safe = { name: user.name, email: user.email };
-  localStorage.setItem(KEY, JSON.stringify(safe));
-}
-
-export function clearDemoUser() {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(KEY);
-}
+// Client-side search history utilities
+// (Demo auth functions removed - now using Firebase authentication)
 
 const SEARCH_KEY = 'animestop-demo-searches';
 

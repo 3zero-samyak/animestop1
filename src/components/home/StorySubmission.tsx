@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 
 const steps = [
@@ -10,7 +11,7 @@ const steps = [
 
 export default function StorySubmission() {
   return (
-    <article className="community-panel group cursor-pointer" data-mode-image-container>
+    <Link href="/share-story" className="community-panel group cursor-pointer" data-mode-image-container>
       {/* Media layer */}
       <div className="community-panel-media" style={{ backgroundColor: 'var(--surface-secondary)' }} />
 
@@ -56,7 +57,7 @@ export default function StorySubmission() {
         </div>
         
         {/* Button */}
-        <button
+        <span
           className="inline-flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-300 hover:gap-3 w-fit button"
           style={{
             border: '1px solid var(--accent-orange)',
@@ -66,8 +67,8 @@ export default function StorySubmission() {
         >
           <span className="text-sm font-medium">Share Your Story</span>
           <ArrowRight className="w-4 h-4" />
-        </button>
+        </span>
       </div>
-    </article>
+    </Link>
   );
 }
