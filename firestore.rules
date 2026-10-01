@@ -1,0 +1,341 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function adminDocPath() {
+      return /databases/$(database)/documents/admins/$(request.auth.uid);
+    }
+
+    function isAdmin() {
+      return request.auth != null
+             && exists(adminDocPath())
+             && get(adminDocPath()).data.uid == request.auth.uid
+             && get(adminDocPath()).data.active == true;
+    }
+
+    function isValidDisplayName(value) {
+      return value == null || value is string;
+    }
+
+    function hasOnlyUserProfileKeys(data) {
+      return data.keys().hasOnly(['uid', 'displayName', 'email', 'emailVerified', 'createdAt', 'updatedAt']);
+    }
+
+    function hasRequiredUserProfileKeys(data) {
+      return data.keys().hasAll(['uid', 'email', 'emailVerified', 'createdAt', 'updatedAt']);
+    }
+
+    function isValidUserProfileData(data) {
+      return data.uid is string
+             && data.email is string
+             && data.emailVerified is bool
+             && (!('displayName' in data) || isValidDisplayName(data.displayName));
+    }
+
+    function hasOnlyStorySubmissionKeys(data) {
+      return data.keys().hasOnly([
+        'userId',
+        'userDisplayName',
+        'status',
+        'createdAt',
+        'updatedAt',
+        'title',
+        'category',
+        'body',
+        'storyIntent',
+        'requestedVisibility',
+        'publicationConsent',
+        'rejectionReason',
+        'intent',
+        'communityConsent'
+      ]);
+    }
+
+    function hasRequiredStorySubmissionKeys(data) {
+      // Accept either the new schema or the legacy schema (deployment window compatibility)
+      return data.keys().hasAll(['userId', 'userDisplayName', 'status', 'createdAt', 'updatedAt', 'title', 'category', 'body'])
+             && (
+               data.keys().hasAll(['storyIntent', 'requestedVisibility', 'publicationConsent'])
+               || data.keys().hasAll(['intent', 'communityConsent'])
+             );
+    }
+
+    function isValidLegacyStoryIntent(intent) {
+      return intent == 'private'
+             || intent == 'inspiration'
+             || intent == 'community';
+    }
+
+    function isValidRequestedVisibility(value) {
+      return value == 'private' || value == 'public';
+    }
+
+    function isValidOptionalLegacyStoryFields(data) {
+      return (!('intent' in data) || (data.intent is string && isValidLegacyStoryIntent(data.intent)))
+             && (!('communityConsent' in data) || data.communityConsent is bool);
+    }
+
+    function isValidStorySubmissionData(data) {
+      return data.userId is string
+             && isValidDisplayName(data.userDisplayName)
+             && data.status is string
+             && data.title is string
+             && data.title.size() <= 120
+             && data.category is string
+             && data.body is string
+             && data.body.size() <= 20000
+             && (
+               // New schema: explicit visibility + consent fields
+               ('storyIntent' in data
+                && data.storyIntent is string
+                && data.storyIntent.size() >= 10
+                && data.storyIntent.size() <= 2000
+                && data.requestedVisibility is string
+                && isValidRequestedVisibility(data.requestedVisibility)
+                && data.publicationConsent is bool
+                && (data.requestedVisibility == 'private' || data.publicationConsent == true)
+                && !('rejectionReason' in data)
+                && isValidOptionalLegacyStoryFields(data))
+               ||
+               // Legacy schema: pre-Stage 9 client still writing intent + communityConsent
+               (!('storyIntent' in data)
+                && data.intent is string
+                && isValidLegacyStoryIntent(data.intent)
+                && data.communityConsent is bool)
+             );
+    }
+
+    function hasOnlyJournalSubmissionKeys(data) {
+      return data.keys().hasOnly([
+        'userId',
+        'userDisplayName',
+        'status',
+        'createdAt',
+        'updatedAt',
+        'title',
+        'category',
+        'body'
+      ]);
+    }
+
+    function hasRequiredJournalSubmissionKeys(data) {
+      return data.keys().hasAll([
+        'userId',
+        'userDisplayName',
+        'status',
+        'createdAt',
+        'updatedAt',
+        'title',
+        'category',
+        'body'
+      ]);
+    }
+
+    function isValidJournalCategory(category) {
+      return category == 'creator-note'
+             || category == 'behind-the-scenes'
+             || category == 'reflection'
+             || category == 'story-deep-dive'
+             || category == 'community';
+    }
+
+    function isValidJournalSubmissionData(data) {
+      return data.userId is string
+             && isValidDisplayName(data.userDisplayName)
+             && data.status is string
+             && data.title is string
+             && data.title.size() <= 200
+             && data.category is string
+             && isValidJournalCategory(data.category)
+             && data.body is string
+             && data.body.size() <= 20000;
+    }
+
+    function isStatusTransitionAllowed(currentStatus, nextStatus) {
+      return (currentStatus == 'submitted' && (nextStatus == 'approved' || nextStatus == 'rejected'))
+             || (currentStatus == 'approved' && (nextStatus == 'published' || nextStatus == 'rejected'));
+    }
+
+    function hasVerifiableStoryPublicationConsent(data) {
+      return data.requestedVisibility == 'public' && data.publicationConsent == true;
+    }
+
+    function isLegacyStoryDocument(data) {
+      return !('requestedVisibility' in data) || !('publicationConsent' in data);
+    }
+
+    function isValidRejectionReason(reason) {
+      return reason is string && reason.size() >= 20 && reason.size() <= 1000;
+    }
+
+    function isValidAdminModerationUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+             && request.resource.data.updatedAt == request.time
+             && request.resource.data.userId == resource.data.userId
+             && request.resource.data.userDisplayName == resource.data.userDisplayName
+             && request.resource.data.title == resource.data.title
+             && request.resource.data.category == resource.data.category
+             && request.resource.data.body == resource.data.body
+             && request.resource.data.createdAt == resource.data.createdAt
+             && isStatusTransitionAllowed(resource.data.status, request.resource.data.status);
+    }
+
+    function isValidStoryAdminModerationUpdate() {
+      return request.resource.data.updatedAt == request.time
+             && request.resource.data.userId == resource.data.userId
+             && request.resource.data.userDisplayName == resource.data.userDisplayName
+             && request.resource.data.title == resource.data.title
+             && request.resource.data.category == resource.data.category
+             && request.resource.data.body == resource.data.body
+             && request.resource.data.createdAt == resource.data.createdAt
+             && request.resource.data.storyIntent == resource.data.storyIntent
+             && request.resource.data.requestedVisibility == resource.data.requestedVisibility
+             && request.resource.data.publicationConsent == resource.data.publicationConsent
+             && (!('intent' in resource.data) || request.resource.data.intent == resource.data.intent)
+             && (!('communityConsent' in resource.data) || request.resource.data.communityConsent == resource.data.communityConsent)
+             && (
+               (
+                 request.resource.data.status == 'approved'
+                 && resource.data.status == 'submitted'
+                 && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+                 && !('rejectionReason' in request.resource.data)
+               )
+               || (
+                 request.resource.data.status == 'published'
+                 && resource.data.status == 'approved'
+                 && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+                 && hasVerifiableStoryPublicationConsent(resource.data)
+                 && !isLegacyStoryDocument(resource.data)
+                 && !('rejectionReason' in request.resource.data)
+               )
+               || (
+                 request.resource.data.status == 'rejected'
+                 && (resource.data.status == 'submitted' || resource.data.status == 'approved')
+                 && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'rejectionReason'])
+                 && isValidRejectionReason(request.resource.data.rejectionReason)
+               )
+             );
+    }
+
+    function isValidJournalAdminModerationUpdate() {
+      return isValidAdminModerationUpdate();
+    }
+
+    match /admins/{userId} {
+      allow get: if request.auth != null && request.auth.uid == userId;
+      allow list: if false;
+      allow create, update, delete: if false;
+    }
+    
+    // ==================================================
+    // USER PROFILES COLLECTION
+    // ==================================================
+    // Collection: users/{uid}
+    // Schema: { uid, email, displayName?, emailVerified, createdAt, updatedAt }
+    // 
+    // Security model:
+    // - Users can only read their own profile
+    // - Users can only create/update their own profile
+    // - Users cannot change their uid (ownership is immutable)
+    // - Users can delete their own profile (for account deletion)
+    // ==================================================
+    
+    match /users/{userId} {
+      // Read: User can only read their own profile
+      allow read: if request.auth != null 
+                  && request.auth.uid == userId;
+      
+      // Create: User can only create their own profile
+      // - Must be authenticated
+      // - Document ID must match auth UID
+      // - Required fields must be present
+      // - UID in document must match auth UID
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && hasRequiredUserProfileKeys(request.resource.data)
+                    && hasOnlyUserProfileKeys(request.resource.data)
+                    && request.resource.data.uid == request.auth.uid
+                    && isValidUserProfileData(request.resource.data)
+                    // Ensure client cannot spoof email verification state
+                    && request.resource.data.emailVerified == (request.auth.token != null && request.auth.token.email_verified == true)
+                    && request.resource.data.createdAt == request.time
+                    && request.resource.data.updatedAt == request.time;
+      
+      // Update: User can only update their own profile
+      // - Must be authenticated
+      // - Document ID must match auth UID
+      // - Cannot change uid field (ownership is immutable)
+      // - Cannot change createdAt timestamp
+      // - Must update updatedAt timestamp
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && hasRequiredUserProfileKeys(request.resource.data)
+                    && hasOnlyUserProfileKeys(request.resource.data)
+                    && isValidUserProfileData(request.resource.data)
+                    && request.resource.data.uid == resource.data.uid
+                    // Ensure emailVerified cannot be escalated by client-side writes
+                    && request.resource.data.emailVerified == (request.auth.token != null && request.auth.token.email_verified == true)
+                    && request.resource.data.createdAt == resource.data.createdAt
+                    && request.resource.data.updatedAt == request.time;
+      
+      allow delete: if false;
+    }
+    
+    // ==================================================
+    // STORY SUBMISSIONS
+    // ==================================================
+    match /storySubmissions/{submissionId} {
+      allow create: if request.auth != null
+                    && request.auth.token.email_verified == true
+                    && hasRequiredStorySubmissionKeys(request.resource.data)
+                    && hasOnlyStorySubmissionKeys(request.resource.data)
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.status == 'submitted'
+                    && isValidStorySubmissionData(request.resource.data)
+                    && request.resource.data.createdAt == request.time
+                    && request.resource.data.updatedAt == request.time;
+
+      // Owners can read their own submissions; public can read only published
+      allow read: if isAdmin()
+          || (resource.data.status == 'published'
+            && !isLegacyStoryDocument(resource.data)
+            && hasVerifiableStoryPublicationConsent(resource.data))
+                  || (request.auth != null && resource.data.userId == request.auth.uid);
+
+      allow update: if isAdmin() && isValidStoryAdminModerationUpdate();
+      allow delete: if false;
+    }
+
+    // ==================================================
+    // JOURNAL SUBMISSIONS
+    // ==================================================
+    match /journalSubmissions/{submissionId} {
+      allow create: if request.auth != null
+                    && request.auth.token.email_verified == true
+                    && hasRequiredJournalSubmissionKeys(request.resource.data)
+                    && hasOnlyJournalSubmissionKeys(request.resource.data)
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.status == 'submitted'
+                    && isValidJournalSubmissionData(request.resource.data)
+                    && request.resource.data.createdAt == request.time
+                    && request.resource.data.updatedAt == request.time;
+
+      allow read: if isAdmin()
+                  || resource.data.status == 'published'
+                  || (request.auth != null && resource.data.userId == request.auth.uid);
+
+      allow update: if isAdmin() && isValidJournalAdminModerationUpdate();
+      allow delete: if false;
+    }
+    // ==================================================
+    // DEFAULT DENY
+    // ==================================================
+    // All other collections are denied by default
+    // This prevents accidental public access
+    // ==================================================
+    
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="v3-glow" cx="50%" cy="55%" r="50%">
+      <stop offset="0%" stop-color="#70b8e8" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#4080b0" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#04080e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="v3-crystal" x1="0.3" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#c8e8f8" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#80c0e0" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#2060a0" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="#040810"/>
+  <rect width="800" height="1000" fill="url(#v3-glow)"/>
+  <g fill="url(#v3-crystal)" opacity="0.85">
+    <polygon points="400,180 360,580 440,580"/>
+    <polygon points="340,250 310,640 370,640"/>
+    <polygon points="460,230 430,640 490,640"/>
+    <polygon points="280,320 258,680 302,680"/>
+    <polygon points="520,300 498,680 542,680"/>
+    <polygon points="230,380 210,720 250,720"/>
+    <polygon points="570,360 550,720 590,720"/>
+  </g>
+  <g fill="#a0d8f0" opacity="0.4">
+    <polygon points="400,160 420,580 380,580"/>
+    <polygon points="340,240 355,640 325,640"/>
+    <polygon points="460,220 478,640 442,640"/>
+  </g>
+  <rect x="180" y="700" width="440" height="40" rx="4" fill="#1a2840" opacity="0.8"/>
+  <rect x="0" y="740" width="800" height="260" fill="#04080e"/>
+  <g fill="#70b8e8" opacity="0.25">
+    <ellipse cx="400" cy="700" rx="280" ry="18"/>
+    <ellipse cx="400" cy="715" rx="200" ry="12"/>
+  </g>
+  <g fill="#c8e8f8" opacity="0.15">
+    <circle cx="300" cy="380" r="2.5"/><circle cx="500" cy="340" r="2"/>
+    <circle cx="250" cy="450" r="1.5"/><circle cx="550" cy="420" r="2"/>
+    <circle cx="200" cy="520" r="2"/><circle cx="600" cy="500" r="1.5"/>
+  </g>
+</svg>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Search, X, Menu } from 'lucide-react';
 import MobileNavigation from './MobileNavigation';
 import ModeToggle from '@/components/mode/ModeToggle';
+import ProfileMenu from './ProfileMenu';
 import DesktopNavigation from './DesktopNavigation';
 import { useAuth } from '@/lib/AuthProvider';
 import { addSearchQuery } from '@/lib/searchHistory';
@@ -170,7 +171,11 @@ export default function Header() {
               )}
             </div>
 
-            {/* Menu Button */}
+            {/* Profile (desktop only) */}
+            <div className="hidden lg:flex items-center" style={{ marginLeft: 8 }}>
+              <ProfileMenu />
+            </div>
+
             {/* Mode Toggle */}
             <ModeToggle />
           </div>

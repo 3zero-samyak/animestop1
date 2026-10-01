@@ -13,6 +13,11 @@
 # testing
 /coverage
 
+# testing
+/coverage
+*.lcov
+.nyc_output
+
 # next.js
 /.next/
 /out/
@@ -29,6 +34,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+firestore-debug.log
 
 # env files (can opt-in for committing if needed)
 .env*

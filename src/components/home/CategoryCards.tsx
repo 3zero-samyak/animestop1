@@ -10,7 +10,7 @@ const categories = [
     id: 'essentials',
     title: 'ESSENTIALS',
     description: 'Designed for everyday life. Carry the anime you love, wherever you go.',
-    image: '',
+    image: '/images/hero/essential-image.png',
     icon: ShoppingBag,
     gradient: 'linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%)',
     href: '/essentials',
@@ -19,7 +19,7 @@ const categories = [
     id: 'stories',
     title: 'STORIES',
     description: 'Relive the scenes that moved you. Moments that stay forever.',
-    image: '',
+    image: '/images/hero/stories-homepage.png',
     icon: BookOpen,
     gradient: 'linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%)',
     href: '/stories',
@@ -28,7 +28,7 @@ const categories = [
     id: 'possibilities',
     title: 'POSSIBILITIES',
     description: 'What if things were different? Explore alternate realities.',
-    image: '',
+    image: '/images/hero/possibilities-image.png',
     icon: Sparkles,
     gradient: 'linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%)',
     href: '/possibilities',
@@ -37,7 +37,7 @@ const categories = [
     id: 'vault',
     title: 'VAULT',
     description: 'Rare. Exclusive. Legendary. Artifacts for the truest collectors.',
-    image: '',
+    image: '/images/hero/vault-image.png',
     icon: Diamond,
     gradient: 'linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%)',
     href: '/vault',
@@ -67,6 +67,7 @@ export default function CategoryCards() {
                   data-mode-sensitive-background="true"
                   style={{
                     backgroundColor: 'var(--surface-secondary)',
+                    backgroundImage: category.image ? `url(${category.image})` : undefined,
                   }}
                   aria-hidden="true"
                 />

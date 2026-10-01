@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="v1-throne" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#c4942a" stop-opacity="0.7"/>
+      <stop offset="45%" stop-color="#8b6914" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#060402" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="v1-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#060402"/>
+      <stop offset="100%" stop-color="#0a0806"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#v1-bg)"/>
+  <ellipse cx="400" cy="460" rx="340" ry="420" fill="url(#v1-throne)"/>
+  <g fill="#060402" opacity="0.95">
+    <rect x="300" y="340" width="200" height="380" rx="6"/>
+    <rect x="260" y="380" width="280" height="20" rx="4"/>
+    <rect x="280" y="350" width="30" height="220" rx="4"/>
+    <rect x="490" y="350" width="30" height="220" rx="4"/>
+    <polygon points="400,280 300,340 500,340"/>
+    <polygon points="400,260 350,330 450,330"/>
+    <rect x="310" y="680" width="50" height="40" rx="3"/>
+    <rect x="440" y="680" width="50" height="40" rx="3"/>
+    <rect x="290" y="710" width="220" height="20" rx="3"/>
+  </g>
+  <g stroke="#c4942a" stroke-width="1" fill="none" opacity="0.25">
+    <rect x="320" y="420" width="160" height="200" rx="3"/>
+    <line x1="400" y1="420" x2="400" y2="620"/>
+    <polygon points="400,360 330,420 470,420"/>
+  </g>
+  <ellipse cx="400" cy="840" rx="180" ry="20" fill="#c4942a" opacity="0.12"/>
+  <g fill="#c4942a" opacity="0.3">
+    <circle cx="400" cy="840" r="3"/>
+    <circle cx="360" cy="838" r="2"/><circle cx="440" cy="838" r="2"/>
+  </g>
+</svg>

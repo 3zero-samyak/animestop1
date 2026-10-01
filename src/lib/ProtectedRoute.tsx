@@ -7,10 +7,17 @@ import { useAuth } from './AuthProvider';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   loadingComponent?: React.ReactNode;
+  requireEmailVerification?: boolean;
+  verificationRequiredComponent?: React.ReactNode;
 }
 
-export function ProtectedRoute({ children, loadingComponent }: ProtectedRouteProps) {
-  const { user, loading } = useAuth();
+export function ProtectedRoute({ 
+  children, 
+  loadingComponent,
+  requireEmailVerification = false,
+  verificationRequiredComponent,
+}: ProtectedRouteProps) {
+  const { user, loading, isEmailVerified } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -38,6 +45,10 @@ export function ProtectedRoute({ children, loadingComponent }: ProtectedRoutePro
 
   if (!user) {
     return null;
+  }
+
+  if (requireEmailVerification && !isEmailVerified) {
+    return <>{verificationRequiredComponent}</>;
   }
 
   return <>{children}</>;

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="e2-glow" cx="70%" cy="40%" r="45%">
+      <stop offset="0%" stop-color="#ffe0b0" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#c87941" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#0a0806" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="e2-shadow" x1="0.3" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#1a1208"/>
+      <stop offset="100%" stop-color="#0a0804"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="#080604"/>
+  <rect width="800" height="1000" fill="url(#e2-glow)"/>
+  <rect x="80" y="100" width="580" height="720" rx="6" fill="#100e0a" opacity="0.6"/>
+  <rect x="100" y="140" width="540" height="640" rx="4" fill="url(#e2-shadow)" opacity="0.8"/>
+  <g fill="#1e1810" opacity="0.9">
+    <rect x="160" y="280" width="180" height="300" rx="4"/>
+    <polygon points="248,220 280,280 216,280"/>
+  </g>
+  <g fill="#120e08" opacity="0.9">
+    <rect x="460" y="320" width="160" height="240" rx="4"/>
+    <polygon points="538,270 565,320 512,320"/>
+  </g>
+  <rect x="80" y="700" width="600" height="8" fill="#c87941" opacity="0.35"/>
+  <rect x="0" y="780" width="800" height="220" fill="#060402"/>
+  <g fill="#c87941" opacity="0.6">
+    <ellipse cx="250" cy="580" rx="80" ry="8"/>
+    <ellipse cx="540" cy="560" rx="60" ry="6"/>
+  </g>
+</svg>

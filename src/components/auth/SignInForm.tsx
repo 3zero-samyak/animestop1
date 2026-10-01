@@ -9,6 +9,7 @@ export default function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { signIn } = useAuth();
+  const returnTo = searchParams.get('returnTo');
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -98,7 +99,12 @@ export default function SignInForm() {
         </div>
 
         <div className="auth-row auth-aux">
-          <a href="/login?view=forgot" className="auth-link">Forgot your password?</a>
+          <a
+            href={returnTo ? `/login?view=forgot&returnTo=${encodeURIComponent(returnTo)}` : '/login?view=forgot'}
+            className="auth-link"
+          >
+            Forgot your password?
+          </a>
           <button type="button" className="auth-link" onClick={() => router.push('/')} disabled={loading}>
             Back to store
           </button>
@@ -130,7 +136,6 @@ export default function SignInForm() {
             type="button" 
             className="account-access-button" 
             onClick={() => {
-              const returnTo = searchParams.get('returnTo');
               const url = returnTo 
                 ? `/login?view=create&returnTo=${encodeURIComponent(returnTo)}`
                 : '/login?view=create';

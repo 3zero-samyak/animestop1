@@ -5,7 +5,13 @@ import Container from '@/components/ui/Container';
 import Button from '@/components/ui/Button';
 import { ChevronDown, Search } from 'lucide-react';
 
-const HERO_IMAGES: string[] = [];
+const HERO_IMAGES: string[] = [
+  '/images/hero/hero-1.png',
+  '/images/hero/hero-2.png',
+  '/images/hero/hero-3.png',
+  '/images/hero/hero-4.png',
+  '/images/hero/hero-5.png',
+];
 
 export default function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

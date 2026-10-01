@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280">
+  <defs>
+    <radialGradient id="j3-glow" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#c87941" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0a0604" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="280" fill="#0a0604"/>
+  <rect width="400" height="280" fill="url(#j3-glow)"/>
+  <g fill="#1e1408" opacity="0.9">
+    <circle cx="200" cy="140" r="70"/>
+    <rect x="60" y="130" width="90" height="14" rx="3"/>
+    <rect x="250" y="130" width="90" height="14" rx="3"/>
+    <polygon points="200,70 206,90 226,90 210,102 216,122 200,110 184,122 190,102 174,90 194,90"/>
+  </g>
+  <g stroke="#c87941" stroke-width="1.5" fill="none" opacity="0.4">
+    <circle cx="200" cy="140" r="70"/>
+    <rect x="60" y="130" width="90" height="14" rx="3"/>
+    <rect x="250" y="130" width="90" height="14" rx="3"/>
+  </g>
+  <g fill="#c87941" opacity="0.5">
+    <ellipse cx="200" cy="210" rx="70" ry="8"/>
+    <ellipse cx="200" cy="220" rx="50" ry="6"/>
+  </g>
+  <g stroke="#c87941" stroke-width="1" opacity="0.2">
+    <line x1="200" y1="70" x2="200" y2="210"/>
+    <line x1="150" y1="90" x2="190" y2="130"/>
+    <line x1="250" y1="90" x2="210" y2="130"/>
+  </g>
+  <circle cx="200" cy="140" r="12" fill="#c87941" opacity="0.3"/>
+</svg>

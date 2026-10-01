@@ -29,6 +29,9 @@ export default function StoryCard({ story }: StoryCardProps) {
         data-mode-sensitive-background="true"
         style={{
           backgroundColor: 'var(--surface-secondary)',
+          backgroundImage: story.image ? `url(${story.image})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       />
 

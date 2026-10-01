@@ -11,7 +11,7 @@ const stories: StoryCardData[] = [
     anime: 'ONE PIECE',
     title: 'I HAVE NO ENEMIES',
     quote: '"A man\'s dream will never end!"',
-    image: '',
+    image: '/generated/story-card-01.svg',
     href: '/stories/one-piece/no-enemies',
   },
   {
@@ -19,7 +19,7 @@ const stories: StoryCardData[] = [
     anime: 'NARUTO',
     title: 'WHAT IF ITACHI WAS ACCEPTED?',
     quote: '"In this world. Wherever there is light - there will always be shadows."',
-    image: '',
+    image: '/generated/story-card-02.svg',
     href: '/stories/naruto/itachi',
   },
   {
@@ -27,7 +27,7 @@ const stories: StoryCardData[] = [
     anime: 'ATTACK ON TITAN',
     title: 'FREEDOM IS NOT FREE',
     quote: '"If we don\'t fight, we can\'t win."',
-    image: '',
+    image: '/generated/story-card-03.svg',
     href: '/stories/attack-on-titan/freedom',
   },
   {
@@ -35,7 +35,7 @@ const stories: StoryCardData[] = [
     anime: 'DEMON SLAYER',
     title: 'SET YOUR HEART ABLAZE',
     quote: '"Keep moving forward."',
-    image: '',
+    image: '/generated/story-card-04.svg',
     href: '/stories/demon-slayer/heart-ablaze',
   },
   {
@@ -43,7 +43,7 @@ const stories: StoryCardData[] = [
     anime: 'JUJUTSU KAISEN',
     title: 'THE BEAUTY OF BEING STRONG',
     quote: '"The strongest are not always right, but they carry the heaviest burdens."',
-    image: '',
+    image: '/generated/story-card-05.svg',
     href: '/stories/jujutsu-kaisen/being-strong',
   },
   {
@@ -51,7 +51,7 @@ const stories: StoryCardData[] = [
     anime: 'BLEACH',
     title: 'THE DAY WHO CHASED HIS DREAM',
     quote: '"My heart will always be with you."',
-    image: '',
+    image: '/generated/story-card-06.svg',
     href: '/stories/bleach/dream',
   },
 ];

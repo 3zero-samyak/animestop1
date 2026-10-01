@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <linearGradient id="v4-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#200404"/>
+      <stop offset="50%" stop-color="#4a0808"/>
+      <stop offset="100%" stop-color="#0a0402"/>
+    </linearGradient>
+    <radialGradient id="v4-fire" cx="40%" cy="65%" r="50%">
+      <stop offset="0%" stop-color="#c03010" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#200404" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="v4-fire2" cx="70%" cy="60%" r="40%">
+      <stop offset="0%" stop-color="#a02808" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#200404" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#v4-sky)"/>
+  <rect width="800" height="1000" fill="url(#v4-fire)"/>
+  <rect width="800" height="1000" fill="url(#v4-fire2)"/>
+  <g fill="#0a0402" opacity="0.9">
+    <rect x="0" y="580" width="200" height="420"/>
+    <rect x="180" y="650" width="140" height="350"/>
+    <rect x="290" y="700" width="100" height="300"/>
+    <rect x="410" y="680" width="120" height="320"/>
+    <rect x="520" y="610" width="140" height="390"/>
+    <rect x="640" y="660" width="160" height="340"/>
+  </g>
+  <g fill="#0a0402" opacity="0.85">
+    <polygon points="100,580 60,480 140,480"/>
+    <polygon points="250,650 210,540 290,540"/>
+    <polygon points="340,700 300,600 380,600"/>
+    <polygon points="470,680 430,570 510,570"/>
+    <polygon points="590,610 545,500 635,500"/>
+    <polygon points="720,660 676,550 764,550"/>
+  </g>
+  <g fill="#c03010" opacity="0.2">
+    <ellipse cx="160" cy="570" rx="60" ry="12"/>
+    <ellipse cx="330" cy="650" rx="50" ry="10"/>
+    <ellipse cx="540" cy="600" rx="55" ry="10"/>
+    <ellipse cx="730" cy="650" rx="50" ry="10"/>
+  </g>
+  <g fill="#ff4400" opacity="0.15">
+    <circle cx="120" cy="520" r="3"/><circle cx="200" cy="490" r="2"/>
+    <circle cx="350" cy="560" r="2.5"/><circle cx="560" cy="540" r="3"/>
+    <circle cx="680" cy="580" r="2"/><circle cx="430" cy="510" r="2.5"/>
+  </g>
+  <rect x="0" y="0" width="800" height="80" fill="#200404"/>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="sc5-cursed" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#4a1880" stop-opacity="0.85"/>
+      <stop offset="50%" stop-color="#220840" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#04020a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sc5-eye" cx="50%" cy="50%" r="30%">
+      <stop offset="0%" stop-color="#9040e0" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#4a1880" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sc5-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#04020a"/>
+      <stop offset="100%" stop-color="#060410"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#sc5-bg)"/>
+  <ellipse cx="400" cy="500" rx="380" ry="460" fill="url(#sc5-cursed)"/>
+  <g stroke="#6030a8" stroke-width="1.5" fill="none" opacity="0.2">
+    <path d="M400,100 Q260,300 200,500 Q260,700 400,900"/>
+    <path d="M400,100 Q540,300 600,500 Q540,700 400,900"/>
+    <path d="M400,100 Q280,250 400,500 Q520,750 400,900"/>
+  </g>
+  <ellipse cx="400" cy="500" rx="180" ry="220" fill="url(#sc5-eye)" opacity="0.5"/>
+  <g fill="#040208" opacity="0.88">
+    <rect x="368" y="280" width="64" height="200" rx="6"/>
+    <circle cx="400" cy="265" r="40"/>
+    <polygon points="375,280 400,220 425,280"/>
+  </g>
+  <g fill="#9040e0" opacity="0.3">
+    <circle cx="300" cy="380" r="2.5"/><circle cx="500" cy="360" r="2"/>
+    <circle cx="260" cy="520" r="2"/><circle cx="540" cy="500" r="2.5"/>
+    <circle cx="300" cy="660" r="2"/><circle cx="500" cy="640" r="2.5"/>
+    <circle cx="350" cy="750" r="1.5"/><circle cx="450" cy="730" r="2"/>
+  </g>
+  <ellipse cx="400" cy="900" rx="200" ry="18" fill="#4a1880" opacity="0.18"/>
+</svg>

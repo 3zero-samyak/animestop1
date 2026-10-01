@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="s1-sun" cx="50%" cy="56%" r="58%">
+      <stop offset="0%" stop-color="#f0a030" stop-opacity="0.95"/>
+      <stop offset="30%" stop-color="#c07020" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#020b18" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="s1-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#020b18"/>
+      <stop offset="55%" stop-color="#061428"/>
+      <stop offset="100%" stop-color="#040810"/>
+    </linearGradient>
+    <linearGradient id="s1-ocean" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c1e38"/>
+      <stop offset="100%" stop-color="#020810"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#s1-sky)"/>
+  <rect x="0" y="548" width="800" height="452" fill="url(#s1-ocean)"/>
+  <ellipse cx="400" cy="548" rx="420" ry="340" fill="url(#s1-sun)"/>
+  <g opacity="0.25" stroke="#f0a030" stroke-width="1.2">
+    <line x1="400" y1="548" x2="60" y2="0"/>
+    <line x1="400" y1="548" x2="220" y2="0"/>
+    <line x1="400" y1="548" x2="400" y2="20"/>
+    <line x1="400" y1="548" x2="580" y2="0"/>
+    <line x1="400" y1="548" x2="740" y2="0"/>
+    <line x1="400" y1="548" x2="800" y2="120"/>
+    <line x1="400" y1="548" x2="0" y2="120"/>
+  </g>
+  <line x1="0" y1="556" x2="800" y2="556" stroke="#c07020" stroke-width="1.5" opacity="0.5"/>
+  <g fill="#f0a030" opacity="0.22">
+    <ellipse cx="400" cy="648" rx="160" ry="10"/>
+    <ellipse cx="400" cy="720" rx="110" ry="7"/>
+    <ellipse cx="400" cy="788" rx="72" ry="4"/>
+  </g>
+  <g fill="#010609">
+    <polygon points="240,548 320,460 340,548"/>
+    <rect x="240" y="504" width="210" height="44" rx="3"/>
+    <polygon points="400,548 420,480 440,548"/>
+    <rect x="340" y="510" width="12" height="70"/>
+    <rect x="420" y="510" width="10" height="60"/>
+  </g>
+  <g fill="#ffffff" opacity="0.5">
+    <circle cx="90" cy="70" r="1.5"/><circle cx="180" cy="110" r="1"/>
+    <circle cx="650" cy="55" r="1.8"/><circle cx="730" cy="140" r="1"/>
+    <circle cx="40" cy="185" r="1.2"/><circle cx="760" cy="190" r="1.5"/>
+    <circle cx="310" cy="40" r="1"/><circle cx="510" cy="90" r="1"/>
+  </g>
+</svg>

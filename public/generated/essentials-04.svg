@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="e4-ambient" cx="50%" cy="85%" r="45%">
+      <stop offset="0%" stop-color="#b06a20" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0a0604" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="e4-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#080604"/>
+      <stop offset="100%" stop-color="#0c0a06"/>
+    </linearGradient>
+    <linearGradient id="e4-shelf" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a1e10"/>
+      <stop offset="100%" stop-color="#1a1408"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#e4-bg)"/>
+  <rect width="800" height="1000" fill="url(#e4-ambient)"/>
+  <rect x="120" y="820" width="560" height="18" rx="3" fill="url(#e4-shelf)"/>
+  <rect x="120" y="560" width="560" height="14" rx="3" fill="url(#e4-shelf)"/>
+  <rect x="120" y="300" width="560" height="14" rx="3" fill="url(#e4-shelf)"/>
+  <g fill="#1e1608" opacity="0.9">
+    <rect x="180" y="680" width="60" height="140" rx="4"/>
+    <rect x="320" y="700" width="50" height="120" rx="4"/>
+    <rect x="480" y="660" width="70" height="160" rx="4"/>
+    <rect x="560" y="700" width="45" height="120" rx="4"/>
+  </g>
+  <g fill="#1e1608" opacity="0.9">
+    <rect x="200" y="420" width="80" height="140" rx="4"/>
+    <rect x="360" y="440" width="60" height="120" rx="4"/>
+    <rect x="490" y="410" width="75" height="150" rx="4"/>
+  </g>
+  <g fill="#1e1608" opacity="0.9">
+    <rect x="240" y="160" width="70" height="140" rx="4"/>
+    <rect x="420" y="150" width="80" height="150" rx="4"/>
+  </g>
+  <g fill="#c87941" opacity="0.25">
+    <ellipse cx="210" cy="810" rx="30" ry="4"/>
+    <ellipse cx="345" cy="810" rx="25" ry="4"/>
+    <ellipse cx="515" cy="810" rx="35" ry="4"/>
+  </g>
+  <rect x="100" y="838" width="12" height="162" rx="2" fill="#1a1408"/>
+  <rect x="688" y="838" width="12" height="162" rx="2" fill="#1a1408"/>
+</svg>

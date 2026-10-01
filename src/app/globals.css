@@ -1586,6 +1586,100 @@ html[data-display-mode="manga"] .community-panel:hover::after {
   color: var(--text-muted);
 }
 
+/* ==================================================
+   SUBMISSION CARDS - Account & Admin
+   Shared card styles used by My Submissions and Admin
+   ================================================== */
+
+.account-submissions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.submission-card {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+
+.submission-card--admin { padding: 18px; }
+
+.submission-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.submission-card-type {
+  font-family: var(--font-interface);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.submission-badge {
+  font-family: var(--font-interface);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.submission-badge--submitted { background: rgba(255,255,255,0.02); color: var(--text-muted); }
+.submission-badge--approved  { background: rgba(36, 136, 84, 0.07); color: #8fd0a9; border-color: rgba(36,136,84,0.15); }
+.submission-badge--rejected  { background: rgba(182, 63, 49, 0.06); color: var(--accent-red); border-color: rgba(182,63,49,0.12); }
+.submission-badge--published { background: rgba(231,101,52,0.08); color: var(--accent-orange); border-color: rgba(231,101,52,0.18); }
+
+.submission-card-title {
+  margin: 10px 0 6px 0;
+  font-family: var(--font-interface);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.submission-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.submission-card-meta--expanded { flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 6px; }
+.submission-meta-row { display:flex; gap:8px; font-size:0.9rem; color:var(--text-muted); }
+.meta-label { color: var(--text-muted); font-weight:600; min-width:88px; }
+.meta-value { color: var(--text-primary); }
+
+.submission-card-body { margin-top: 12px; color: var(--text-secondary); font-size: 0.98rem; line-height:1.6; }
+.submission-body-text { margin: 0 0 8px 0; white-space:pre-wrap; }
+.submission-card-extra { margin-top:8px; color:var(--text-muted); font-size:0.92rem; display:flex; gap:12px; flex-wrap:wrap; }
+
+.submission-card-actions { margin-top: 12px; display:flex; gap:12px; flex-wrap:wrap; }
+
+/* Responsive: show status right-aligned on wide screens */
+@media (min-width: 800px) {
+  .submission-card { padding: 18px; }
+  .submission-card-header { align-items: flex-start; }
+  .submission-card-meta { justify-content: flex-start; }
+}
+
+@media (max-width: 799px) {
+  .submission-card { padding: 14px; }
+  .submission-card-header { flex-direction: row; gap:10px; }
+  .submission-card-meta--expanded { margin-top: 10px; }
+}
+
 /* Read All Articles Button */
 .journal-all-link {
   flex-shrink: 0;
@@ -9331,6 +9425,231 @@ body[data-display-mode='manga'] .account-access-button:focus-visible {
 @media (max-width: 700px) {
   .account-access, .auth-form-shell { width: calc(100% - 28px); }
   .account-access-button { min-height: 60px; }
+}
+
+/* ==================================================
+   ACCOUNT PAGE STYLES
+   ================================================== */
+
+.account-page-container {
+  width: min(calc(100% - 32px), 720px);
+  margin-inline: auto;
+  padding-block: clamp(28px, 6vh, 60px);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.account-page-title {
+  text-align: center;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-family: var(--font-interface);
+  letter-spacing: 0.05em;
+  margin: 0 0 24px;
+}
+
+.account-section {
+  border: 1px solid var(--account-border, rgba(255,255,255,0.12));
+  border-radius: 8px;
+  padding: 24px;
+  background: color-mix(in srgb, var(--background-primary) 98%, var(--text-primary) 2%);
+}
+
+.account-section-danger {
+  border-color: color-mix(in srgb, #ff6b6b 40%, var(--account-border, rgba(255,255,255,0.12)));
+}
+
+.account-section-title {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-family: var(--font-interface);
+  letter-spacing: 0.05em;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+}
+
+.account-section-desc {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.account-section-email {
+  font-weight: 500;
+  color: var(--accent-primary);
+  margin-bottom: 16px;
+}
+
+.account-field {
+  margin-bottom: 20px;
+}
+
+.account-field:last-child {
+  margin-bottom: 0;
+}
+
+.account-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.account-value {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.account-verified {
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+.account-not-verified {
+  color: #ffb4a6;
+}
+
+.account-value-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.account-edit-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-form-field {
+  margin-bottom: 16px;
+}
+
+.account-button-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.account-button {
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 4px;
+  font-family: var(--font-interface);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.account-button-small {
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 4px;
+  font-family: var(--font-interface);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.account-button-primary {
+  background: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  color: #fff;
+}
+
+.account-button-primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-primary) 85%, #fff);
+  transform: translateY(-1px);
+}
+
+.account-button-secondary {
+  background: transparent;
+  border: 1px solid var(--account-border, rgba(255,255,255,0.18));
+  color: var(--text-primary);
+}
+
+.account-button-secondary:hover:not(:disabled) {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.account-button-danger {
+  background: transparent;
+  border: 1px solid #ff6b6b;
+  color: #ff6b6b;
+}
+
+.account-button-danger:hover:not(:disabled) {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.account-button:disabled,
+.account-button-small:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.account-error {
+  color: #ffb4a6;
+  font-size: 0.9rem;
+  margin: 8px 0 0;
+}
+
+.account-success {
+  color: var(--accent-primary);
+  font-size: 0.9rem;
+  margin: 8px 0 0;
+}
+
+body[data-display-mode='manga'] .account-section {
+  background: rgba(0,0,0,0.02);
+  border-color: #174B43;
+}
+
+body[data-display-mode='manga'] .account-button-primary {
+  background: #174B43;
+  border-color: #174B43;
+  color: #fff;
+}
+
+body[data-display-mode='manga'] .account-button-primary:hover:not(:disabled) {
+  background: #1a5a4f;
+}
+
+body[data-display-mode='manga'] .account-button-secondary {
+  border-color: #174B43;
+  color: #174B43;
+}
+
+body[data-display-mode='manga'] .account-button-secondary:hover:not(:disabled) {
+  background: rgba(23,75,67,0.08);
+}
+
+@media (max-width: 599px) {
+  .account-page-container {
+    width: calc(100% - 24px);
+    gap: 24px;
+  }
+
+  .account-section {
+    padding: 18px;
+  }
+
+  .account-button-group {
+    flex-direction: column;
+  }
+
+  .account-button,
+  .account-button-small {
+    width: 100%;
+  }
 }
 
 

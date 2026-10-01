@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="sc6-spirit" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#4080b8" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#1840a0" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#040810" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sc6-chain" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#80c0f0" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#2060a0" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="sc6-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#040810"/>
+      <stop offset="100%" stop-color="#06080e"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#sc6-bg)"/>
+  <ellipse cx="400" cy="440" rx="360" ry="420" fill="url(#sc6-spirit)"/>
+  <g fill="none" stroke="#80c0f0" stroke-width="2.5" opacity="0.2">
+    <path d="M400,180 Q380,250 400,310 Q420,370 400,430 Q380,490 400,550 Q420,610 400,670 Q380,730 400,800"/>
+  </g>
+  <g fill="#80c0f0" opacity="0.3">
+    <circle cx="400" cy="190" r="8"/><circle cx="400" cy="310" r="8"/>
+    <circle cx="400" cy="430" r="8"/><circle cx="400" cy="550" r="8"/>
+    <circle cx="400" cy="670" r="8"/>
+  </g>
+  <g fill="none" stroke="#80c0f0" stroke-width="1" opacity="0.15">
+    <ellipse cx="400" cy="440" rx="240" ry="290"/>
+    <ellipse cx="400" cy="440" rx="320" ry="390"/>
+  </g>
+  <g fill="#040810" opacity="0.88">
+    <rect x="375" y="500" width="50" height="180" rx="5"/>
+    <circle cx="400" cy="488" r="32"/>
+    <polygon points="382,500 400,445 418,500"/>
+  </g>
+  <g fill="#80c0f0" opacity="0.25">
+    <circle cx="240" cy="340" r="2"/><circle cx="560" cy="320" r="2"/>
+    <circle cx="200" cy="480" r="1.5"/><circle cx="600" cy="460" r="1.5"/>
+    <circle cx="240" cy="600" r="2"/><circle cx="560" cy="580" r="2"/>
+  </g>
+  <g fill="#ffffff" opacity="0.25">
+    <circle cx="100" cy="80" r="1"/><circle cx="680" cy="100" r="1.5"/>
+    <circle cx="50" cy="200" r="1"/><circle cx="750" cy="180" r="1"/>
+  </g>
+  <rect x="0" y="0" width="800" height="80" fill="#040810"/>
+  <rect x="0" y="920" width="800" height="80" fill="#06080e"/>
+</svg>

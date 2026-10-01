@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280">
+  <defs>
+    <radialGradient id="j2-vortex" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7b47c8" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#3020a0" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#04020e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="280" fill="#04020e"/>
+  <rect width="400" height="280" fill="url(#j2-vortex)"/>
+  <g fill="none" stroke="#b080ff" stroke-width="1.2" opacity="0.35">
+    <ellipse cx="200" cy="140" rx="150" ry="120"/>
+    <ellipse cx="200" cy="140" rx="100" ry="80"/>
+    <ellipse cx="200" cy="140" rx="55" ry="44"/>
+  </g>
+  <g fill="none" stroke="#7b47c8" stroke-width="0.8" opacity="0.2">
+    <line x1="200" y1="20" x2="200" y2="260"/>
+    <line x1="90" y1="70" x2="310" y2="210"/>
+    <line x1="90" y1="210" x2="310" y2="70"/>
+    <line x1="50" y1="140" x2="350" y2="140"/>
+  </g>
+  <circle cx="200" cy="140" r="16" fill="#4020a0" opacity="0.9"/>
+  <circle cx="200" cy="140" r="7" fill="#c090ff" opacity="0.95"/>
+  <g fill="#b080ff" opacity="0.3">
+    <circle cx="200" cy="20" r="2.5"/><circle cx="200" cy="260" r="2.5"/>
+    <circle cx="50" cy="140" r="2.5"/><circle cx="350" cy="140" r="2.5"/>
+  </g>
+</svg>

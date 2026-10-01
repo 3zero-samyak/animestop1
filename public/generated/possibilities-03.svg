@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="p3-fog" cx="50%" cy="60%" r="60%">
+      <stop offset="0%" stop-color="#3a1a68" stop-opacity="0.7"/>
+      <stop offset="60%" stop-color="#1a0838" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#04020a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="p3-eyes" cx="50%" cy="35%" r="20%">
+      <stop offset="0%" stop-color="#8040f8" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#5020c0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="p3-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#04020a"/>
+      <stop offset="100%" stop-color="#060410"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#p3-bg)"/>
+  <ellipse cx="400" cy="600" rx="380" ry="460" fill="url(#p3-fog)"/>
+  <g fill="#1a0838" opacity="0.7">
+    <ellipse cx="400" cy="700" rx="200" ry="60"/>
+    <ellipse cx="350" cy="640" rx="80" ry="100"/>
+    <ellipse cx="450" cy="650" rx="80" ry="110"/>
+    <ellipse cx="400" cy="600" rx="120" ry="160"/>
+    <ellipse cx="400" cy="530" rx="90" ry="100"/>
+    <ellipse cx="400" cy="470" rx="70" ry="80"/>
+    <polygon points="340,600 460,600 400,380"/>
+  </g>
+  <ellipse cx="370" cy="440" rx="22" ry="14" fill="url(#p3-eyes)"/>
+  <ellipse cx="430" cy="440" rx="22" ry="14" fill="url(#p3-eyes)"/>
+  <circle cx="370" cy="440" r="8" fill="#c080ff" opacity="0.9"/>
+  <circle cx="430" cy="440" r="8" fill="#c080ff" opacity="0.9"/>
+  <circle cx="370" cy="440" r="3" fill="#ffffff" opacity="0.95"/>
+  <circle cx="430" cy="440" r="3" fill="#ffffff" opacity="0.95"/>
+  <g stroke="#5020c0" stroke-width="1" fill="none" opacity="0.2">
+    <path d="M280,700 Q300,600 340,500 Q360,460 370,440"/>
+    <path d="M520,700 Q500,600 460,500 Q440,460 430,440"/>
+    <path d="M400,800 Q380,720 360,640 Q350,580 370,500"/>
+    <path d="M400,800 Q420,720 440,640 Q450,580 430,500"/>
+  </g>
+  <g fill="#8040f8" opacity="0.15">
+    <circle cx="280" cy="600" r="2.5"/><circle cx="520" cy="620" r="2"/>
+    <circle cx="320" cy="760" r="2"/><circle cx="480" cy="750" r="2.5"/>
+    <circle cx="360" cy="820" r="1.5"/><circle cx="440" cy="810" r="2"/>
+  </g>
+</svg>

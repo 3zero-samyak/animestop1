@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="sc4-inferno" cx="50%" cy="75%" r="65%">
+      <stop offset="0%" stop-color="#ff3300" stop-opacity="0.95"/>
+      <stop offset="35%" stop-color="#c01800" stop-opacity="0.7"/>
+      <stop offset="70%" stop-color="#600408" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0a0202" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sc4-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0202"/>
+      <stop offset="100%" stop-color="#0c0204"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#sc4-bg)"/>
+  <ellipse cx="400" cy="1000" rx="480" ry="560" fill="url(#sc4-inferno)"/>
+  <g fill="#ff4400" opacity="0.25">
+    <path d="M340,1000 Q310,750 290,500 Q340,380 370,300 Q400,260 430,300 Q460,380 510,500 Q490,750 460,1000Z"/>
+    <path d="M380,1000 Q365,800 355,600 Q375,500 400,460 Q425,500 445,600 Q435,800 420,1000Z"/>
+  </g>
+  <g fill="#ff6600" opacity="0.45">
+    <circle cx="340" cy="680" r="3.5"/><circle cx="380" cy="570" r="3"/>
+    <circle cx="420" cy="540" r="3.5"/><circle cx="460" cy="610" r="3"/>
+    <circle cx="310" cy="760" r="2.5"/><circle cx="490" cy="720" r="3"/>
+    <circle cx="360" cy="460" r="2.5"/><circle cx="440" cy="480" r="2.5"/>
+    <circle cx="290" cy="630" r="2.5"/><circle cx="510" cy="650" r="2.5"/>
+  </g>
+  <rect x="0" y="0" width="800" height="240" fill="#0a0202" opacity="0.75"/>
+  <g fill="#ff3300" opacity="0.12">
+    <ellipse cx="400" cy="800" rx="160" ry="22"/>
+    <ellipse cx="400" cy="860" rx="110" ry="14"/>
+  </g>
+</svg>

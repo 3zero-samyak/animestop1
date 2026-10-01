@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { User } from 'firebase/auth';
+import Link from 'next/link';
 import ScrollReveal from '@/components/animation/ScrollReveal';
+import { submitStory, type StoryVisibility } from '@/lib/submissions';
 
 interface ShareStoryFormProps {
   user: User | null;
@@ -17,19 +18,13 @@ interface StoryDraft {
   title: string;
   category: string;
   body: string;
-  intent: string;
-  communityConsent: boolean;
+  storyIntent: string;
+  requestedVisibility: StoryVisibility;
+  publicationConsent: boolean;
   updatedAt: string;
 }
 
-interface StorySubmission extends StoryDraft {
-  id: string;
-  submittedAt: string;
-  status: string;
-}
-
 const DRAFT_KEY = 'animestop-story-draft';
-const SUBMISSIONS_KEY = 'animestop-story-submissions';
 
 const CATEGORIES = [
   'Anime',
@@ -42,12 +37,6 @@ const CATEGORIES = [
   'Other',
 ];
 
-const INTENT_OPTIONS = [
-  { value: 'private', label: 'Keep it private for the AnimeStop team' },
-  { value: 'inspiration', label: 'Consider it as inspiration for a future build' },
-  { value: 'community', label: 'Share it with the AnimeStop community' },
-];
-
 export default function ShareStoryForm({ user }: ShareStoryFormProps) {
   const router = useRouter();
   const [draftChecked, setDraftChecked] = useState(false);
@@ -58,11 +47,13 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [body, setBody] = useState('');
-  const [intent, setIntent] = useState('private');
-  const [communityConsent, setCommunityConsent] = useState(false);
+  const [storyIntent, setStoryIntent] = useState('');
+  const [requestedVisibility, setRequestedVisibility] = useState<StoryVisibility>('private');
+  const [publicationConsent, setPublicationConsent] = useState(false);
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [draftSaveStatus, setDraftSaveStatus] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const saveDraft = (showNotification = true) => {
     if (!user) return;
@@ -75,8 +66,9 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
         title,
         category,
         body,
-        intent,
-        communityConsent,
+        storyIntent,
+        requestedVisibility,
+        publicationConsent,
         updatedAt: new Date().toISOString(),
       };
       
@@ -95,8 +87,9 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
     setTitle(savedDraft.title || '');
     setCategory(savedDraft.category || '');
     setBody(savedDraft.body || '');
-    setIntent(savedDraft.intent || 'private');
-    setCommunityConsent(savedDraft.communityConsent || false);
+    setStoryIntent(savedDraft.storyIntent || '');
+    setRequestedVisibility(savedDraft.requestedVisibility || 'private');
+    setPublicationConsent(savedDraft.publicationConsent || false);
     setShowDraftPrompt(false);
   };
 
@@ -138,7 +131,7 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
     
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, category, body, intent, communityConsent, user, submitted, draftChecked]);
+  }, [title, category, body, storyIntent, requestedVisibility, publicationConsent, user, submitted, draftChecked]);
 
   const getWordCount = (text: string) => {
     return text.trim().split(/\s+/).filter(Boolean).length;
@@ -169,25 +162,28 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
       newErrors.body = 'Story must be 20,000 characters or less';
     }
 
-    if (!intent) {
-      newErrors.intent = 'Please select what you would like us to do with this story';
+    if (!storyIntent.trim() || storyIntent.trim().length < 10) {
+      newErrors.storyIntent = 'Please explain why you are sharing this story in at least 10 characters';
     }
 
-    if (intent === 'community' && !communityConsent) {
-      newErrors.consent = 'Please confirm you understand this story will be reviewed before publication';
+    if (requestedVisibility === 'public' && !publicationConsent) {
+      newErrors.publicationConsent = 'Please confirm that this story may become publicly visible on AnimeStop after approval';
     }
 
     return newErrors;
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
+    if (submitting) {
+      return;
+    }
+
     const validationErrors = validate();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
-      // Focus first invalid field
       const firstError = Object.keys(validationErrors)[0];
       const element = document.getElementById(firstError);
       element?.focus();
@@ -196,35 +192,37 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
 
     if (!user) return;
 
-    // Save submission locally (since no backend exists yet)
+    setSubmitting(true);
+    setErrors({});
+
     try {
-      const submission: StorySubmission = {
-        id: crypto.randomUUID(),
-        userId: user.email || '',
-        authorName: user.displayName || undefined,
-        authorEmail: user.email || '',
-        title,
-        category,
-        body,
-        intent,
-        communityConsent,
-        updatedAt: new Date().toISOString(),
-        submittedAt: new Date().toISOString(),
-        status: 'submitted-locally',
-      };
+      await submitStory({ title, category, body, storyIntent: storyIntent.trim(), requestedVisibility, publicationConsent });
 
-      // Get existing submissions
-      const existingRaw = localStorage.getItem(SUBMISSIONS_KEY);
-      const existing = existingRaw ? JSON.parse(existingRaw) : [];
-      existing.push(submission);
-      localStorage.setItem(SUBMISSIONS_KEY, JSON.stringify(existing));
-
-      // Clear draft
-      localStorage.removeItem(DRAFT_KEY);
+      // Clear local draft after successful remote submission
+      try { localStorage.removeItem(DRAFT_KEY); } catch {}
 
       setSubmitted(true);
-    } catch {
-      setErrors({ submit: 'Unable to save your story. Please try again.' });
+    } catch (err: unknown) {
+      if (process.env.NODE_ENV === 'development' && err && typeof err === 'object') {
+        const submissionError = err as { code?: string; message?: string };
+        console.error(`[Story submit] code: ${submissionError.code ?? 'unknown'}`);
+        console.error(`[Story submit] message: ${submissionError.message ?? 'Unknown Firebase error'}`);
+      }
+
+      // Narrow common Firebase error shapes safely
+      type ErrWithCode = { code?: string };
+      const code = (err && typeof err === 'object' && 'code' in err) ? (err as ErrWithCode).code : '';
+      if (code === 'permission-denied') {
+        setErrors({ submit: 'Your account is not permitted to submit this story.' });
+      } else if (code === 'unavailable') {
+        setErrors({ submit: 'AnimeStop is temporarily unable to accept submissions. Please try again.' });
+      } else if (code === 'network-request-failed') {
+        setErrors({ submit: 'Network error. Check your connection and try again.' });
+      } else {
+        setErrors({ submit: 'We couldn\'t submit your story. Please try again.' });
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -266,15 +264,12 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
       <div className="share-story-page">
         <ScrollReveal>
           <div className="share-story-success">
-            <h1 className="share-story-success-title">STORY RECEIVED</h1>
+            <h1 className="share-story-success-title">STORY SUBMITTED</h1>
             <p className="share-story-success-text">
               Thank you for sharing this moment with AnimeStop.
             </p>
             <p className="share-story-success-text">
-              Your story has been saved successfully.
-            </p>
-            <p className="share-story-success-note">
-              Your story is currently saved on this device. Online submission will be connected when the publishing system is available.
+              Your story has been received and will be reviewed before it appears publicly.
             </p>
             <div className="share-story-success-actions">
               <button
@@ -285,8 +280,9 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
                   setTitle('');
                   setCategory('');
                   setBody('');
-                  setIntent('private');
-                  setCommunityConsent(false);
+                  setStoryIntent('');
+                  setRequestedVisibility('private');
+                  setPublicationConsent(false);
                   setErrors({});
                 }}
               >
@@ -431,60 +427,91 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
 
         <ScrollReveal delay={550}>
           <div className="form-field">
-            <p className="share-story-label">
-              WHAT WOULD YOU LIKE US TO DO WITH THIS STORY? <span aria-hidden="true">*</span>
-            </p>
-            <div className="story-intent-options">
-              {INTENT_OPTIONS.map((option) => (
-                <label key={option.value} className="story-intent-option">
-                  <input
-                    type="radio"
-                    name="intent"
-                    value={option.value}
-                    checked={intent === option.value}
-                    onChange={(e) => {
-                      setIntent(e.target.value);
-                      if (errors.intent) setErrors({ ...errors, intent: '' });
-                      if (e.target.value !== 'community') {
-                        setCommunityConsent(false);
-                      }
-                    }}
-                    className="story-intent-radio"
-                  />
-                  <span className="story-intent-label">{option.label}</span>
-                </label>
-              ))}
-            </div>
-            {errors.intent && (
-              <span className="form-error" role="alert">
-                {errors.intent}
+            <label htmlFor="storyIntent" className="share-story-label">
+              WHY ARE YOU SHARING THIS STORY? <span aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="storyIntent"
+              name="storyIntent"
+              value={storyIntent}
+              onChange={(e) => {
+                setStoryIntent(e.target.value);
+                if (errors.storyIntent) setErrors({ ...errors, storyIntent: '' });
+              }}
+              placeholder="Tell AnimeStop why this story matters to you and what you hope comes from sharing it..."
+              className="story-editor story-intent-textarea"
+              aria-required="true"
+              aria-invalid={!!errors.storyIntent}
+              aria-describedby={errors.storyIntent ? 'storyIntent-error' : undefined}
+            />
+            {errors.storyIntent && (
+              <span id="storyIntent-error" className="form-error" role="alert">
+                {errors.storyIntent}
               </span>
             )}
           </div>
         </ScrollReveal>
 
-        {intent === 'community' && (
+        <ScrollReveal delay={600}>
+          <div className="form-field">
+            <p className="share-story-label">
+              VISIBILITY PREFERENCE <span aria-hidden="true">*</span>
+            </p>
+            <div className="story-intent-options">
+              <label className="story-intent-option">
+                <input
+                  type="radio"
+                  name="requestedVisibility"
+                  value="private"
+                  checked={requestedVisibility === 'private'}
+                  onChange={() => {
+                    setRequestedVisibility('private');
+                    setPublicationConsent(false);
+                    if (errors.publicationConsent) setErrors({ ...errors, publicationConsent: '' });
+                  }}
+                  className="story-intent-radio"
+                />
+                <span className="story-intent-label">PRIVATE — only you and authorized AnimeStop admins can access this Story.</span>
+              </label>
+              <label className="story-intent-option">
+                <input
+                  type="radio"
+                  name="requestedVisibility"
+                  value="public"
+                  checked={requestedVisibility === 'public'}
+                  onChange={() => {
+                    setRequestedVisibility('public');
+                  }}
+                  className="story-intent-radio"
+                />
+                <span className="story-intent-label">REQUEST PUBLICATION — AnimeStop may consider this Story for public publication after admin review.</span>
+              </label>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {requestedVisibility === 'public' && (
           <ScrollReveal delay={600}>
             <div className="form-field">
               <label className="story-consent-label">
                 <input
                   type="checkbox"
-                  checked={communityConsent}
+                  checked={publicationConsent}
                   onChange={(e) => {
-                    setCommunityConsent(e.target.checked);
-                    if (errors.consent) setErrors({ ...errors, consent: '' });
+                    setPublicationConsent(e.target.checked);
+                    if (errors.publicationConsent) setErrors({ ...errors, publicationConsent: '' });
                   }}
                   className="story-consent-checkbox"
-                  aria-invalid={!!errors.consent}
-                  aria-describedby={errors.consent ? 'consent-error' : undefined}
+                  aria-invalid={!!errors.publicationConsent}
+                  aria-describedby={errors.publicationConsent ? 'publicationConsent-error' : undefined}
                 />
                 <span>
-                  I understand that AnimeStop may review this story before it appears publicly.
+                  I give AnimeStop permission to make this Story publicly visible on AnimeStop if it is approved for publication.
                 </span>
               </label>
-              {errors.consent && (
-                <span id="consent-error" className="form-error" role="alert">
-                  {errors.consent}
+              {errors.publicationConsent && (
+                <span id="publicationConsent-error" className="form-error" role="alert">
+                  {errors.publicationConsent}
                 </span>
               )}
             </div>
@@ -508,8 +535,9 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
             <button
               type="submit"
               className="share-story-action share-story-action-primary"
+              disabled={submitting}
             >
-              Submit Your Story →
+              {submitting ? 'SUBMITTING...' : 'Submit Your Story →'}
             </button>
           </div>
         </ScrollReveal>

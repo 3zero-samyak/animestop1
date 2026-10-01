@@ -7,19 +7,19 @@ const articles = [
     id: 1,
     title: "Why We Build\n'Set Your Heart Ablaze'",
     timeAgo: '2 days ago',
-    image: '',
+    image: '/generated/journal-01.svg',
   },
   {
     id: 2,
     title: 'The Beauty of\nAlternate Realities',
     timeAgo: '5 days ago',
-    image: '',
+    image: '/generated/journal-02.svg',
   },
   {
     id: 3,
     title: 'Behind The Build:\nMemory Rewind',
     timeAgo: '1 week ago',
-    image: '',
+    image: '/generated/journal-03.svg',
   },
 ];
 
@@ -58,9 +58,11 @@ export default function JournalSection() {
               {/* Thumbnail */}
               <div className="journal-thumbnail">
                 <div 
-                  className="w-full h-full bg-cover bg-center rounded-md"
+                  className="w-full h-full bg-cover bg-center rounded-md mode-sensitive-background"
+                  data-mode-sensitive-background="true"
                   style={{
                     backgroundColor: 'var(--surface-secondary)',
+                    backgroundImage: article.image ? `url(${article.image})` : undefined,
                   }}
                 />
               </div>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="p4-ring1" cx="50%" cy="55%" r="45%">
+      <stop offset="80%" stop-color="#e76534" stop-opacity="0"/>
+      <stop offset="90%" stop-color="#e76534" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#e76534" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="p4-ring2" cx="50%" cy="55%" r="32%">
+      <stop offset="80%" stop-color="#7b47c8" stop-opacity="0"/>
+      <stop offset="90%" stop-color="#7b47c8" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#7b47c8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="p4-ring3" cx="50%" cy="55%" r="20%">
+      <stop offset="80%" stop-color="#4080d0" stop-opacity="0"/>
+      <stop offset="90%" stop-color="#4080d0" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#4080d0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="p4-center" cx="50%" cy="55%" r="8%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="p4-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#04020e"/>
+      <stop offset="100%" stop-color="#060410"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#p4-bg)"/>
+  <g fill="#ffffff" opacity="0.35">
+    <circle cx="100" cy="80" r="1"/><circle cx="700" cy="120" r="1.5"/>
+    <circle cx="50" cy="400" r="1"/><circle cx="750" cy="380" r="1"/>
+    <circle cx="200" cy="900" r="1"/><circle cx="650" cy="920" r="1.5"/>
+  </g>
+  <rect width="800" height="1000" fill="url(#p4-ring1)"/>
+  <rect width="800" height="1000" fill="url(#p4-ring2)"/>
+  <rect width="800" height="1000" fill="url(#p4-ring3)"/>
+  <rect width="800" height="1000" fill="url(#p4-center)"/>
+  <g fill="none">
+    <ellipse cx="400" cy="550" rx="320" ry="380" stroke="#e76534" stroke-width="2" opacity="0.4"/>
+    <ellipse cx="400" cy="550" rx="230" ry="270" stroke="#7b47c8" stroke-width="2" opacity="0.4"/>
+    <ellipse cx="400" cy="550" rx="145" ry="170" stroke="#4080d0" stroke-width="2" opacity="0.4"/>
+  </g>
+  <g fill="#0c0416" opacity="0.9">
+    <rect x="376" y="250" width="48" height="180" rx="6"/>
+    <circle cx="400" cy="238" r="30"/>
+    <polygon points="385,250 400,200 415,250"/>
+  </g>
+  <g fill="#e76534" opacity="0.2">
+    <circle cx="400" cy="550" r="240" fill="none" stroke="#e76534" stroke-width="0.5"/>
+  </g>
+  <ellipse cx="400" cy="880" rx="160" ry="16" fill="#7b47c8" opacity="0.12"/>
+</svg>

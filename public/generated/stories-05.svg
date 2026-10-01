@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <radialGradient id="s5-g1" cx="30%" cy="40%" r="20%">
+      <stop offset="0%" stop-color="#c87941" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#c87941" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="s5-g2" cx="65%" cy="60%" r="18%">
+      <stop offset="0%" stop-color="#b06030" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#b06030" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="s5-g3" cx="50%" cy="25%" r="15%">
+      <stop offset="0%" stop-color="#d4945a" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#d4945a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="s5-g4" cx="20%" cy="70%" r="12%">
+      <stop offset="0%" stop-color="#a06028" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#a06028" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="s5-fog" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#0e0a14"/>
+      <stop offset="100%" stop-color="#060410"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#s5-fog)"/>
+  <rect width="800" height="1000" fill="url(#s5-g1)"/>
+  <rect width="800" height="1000" fill="url(#s5-g2)"/>
+  <rect width="800" height="1000" fill="url(#s5-g3)"/>
+  <rect width="800" height="1000" fill="url(#s5-g4)"/>
+  <g>
+    <ellipse cx="240" cy="390" rx="22" ry="28" fill="#c87941" opacity="0.85"/>
+    <ellipse cx="240" cy="390" rx="40" ry="50" fill="#c87941" opacity="0.2"/>
+    <ellipse cx="240" cy="390" rx="65" ry="80" fill="#c87941" opacity="0.08"/>
+    <line x1="240" y1="418" x2="240" y2="500" stroke="#c87941" stroke-width="1.5" opacity="0.4"/>
+  </g>
+  <g>
+    <ellipse cx="530" cy="580" rx="18" ry="24" fill="#b06030" opacity="0.9"/>
+    <ellipse cx="530" cy="580" rx="36" ry="46" fill="#b06030" opacity="0.22"/>
+    <ellipse cx="530" cy="580" rx="60" ry="72" fill="#b06030" opacity="0.09"/>
+    <line x1="530" y1="604" x2="530" y2="680" stroke="#b06030" stroke-width="1.5" opacity="0.4"/>
+  </g>
+  <g>
+    <ellipse cx="400" cy="220" rx="14" ry="18" fill="#d4945a" opacity="0.8"/>
+    <ellipse cx="400" cy="220" rx="30" ry="36" fill="#d4945a" opacity="0.18"/>
+    <line x1="400" y1="238" x2="400" y2="310" stroke="#d4945a" stroke-width="1.2" opacity="0.35"/>
+  </g>
+  <g>
+    <ellipse cx="160" cy="680" rx="12" ry="16" fill="#a06028" opacity="0.75"/>
+    <ellipse cx="160" cy="680" rx="28" ry="34" fill="#a06028" opacity="0.18"/>
+    <line x1="160" y1="696" x2="160" y2="760" stroke="#a06028" stroke-width="1" opacity="0.3"/>
+  </g>
+  <g>
+    <ellipse cx="640" cy="310" rx="10" ry="13" fill="#c87941" opacity="0.7"/>
+    <ellipse cx="640" cy="310" rx="22" ry="28" fill="#c87941" opacity="0.15"/>
+    <line x1="640" y1="323" x2="640" y2="380" stroke="#c87941" stroke-width="1" opacity="0.3"/>
+  </g>
+  <g fill="#c87941" opacity="0.35">
+    <circle cx="300" cy="500" r="2.5"/><circle cx="480" cy="350" r="2"/>
+    <circle cx="360" cy="650" r="1.8"/><circle cx="600" cy="450" r="2.2"/>
+    <circle cx="180" cy="300" r="1.5"/><circle cx="700" cy="600" r="2"/>
+  </g>
+  <rect x="0" y="0" width="800" height="120" fill="#060410" opacity="0.6"/>
+  <rect x="0" y="880" width="800" height="120" fill="#0e0a14" opacity="0.8"/>
+</svg>
