@@ -6,6 +6,7 @@
  */
 export type ProductDetail = {
   id: string;
+  collectionKey?: 'stories' | 'essentials' | 'possibilities' | 'vault';
   category: string;
   title: string;
   cardTitle?: string;

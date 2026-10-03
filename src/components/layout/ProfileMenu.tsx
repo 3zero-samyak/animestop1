@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/AuthProvider';
 import { User as UserIcon } from 'lucide-react';
+import { buildCurrentRelativeUrl, persistAuthReturnTo } from '@/lib/authNavigation';
 
 export default function ProfileMenu() {
   const { user, logout } = useAuth();
@@ -35,6 +36,23 @@ export default function ProfileMenu() {
   const openTo = (href: string) => {
     setOpen(false);
     router.push(href);
+  };
+
+  const openAuthPage = (view?: 'create') => {
+    const destination = buildCurrentRelativeUrl(
+      window.location.pathname,
+      window.location.search,
+      window.location.hash,
+    );
+    persistAuthReturnTo(destination);
+    setOpen(false);
+
+    const params = new URLSearchParams();
+    if (view) {
+      params.set('view', view);
+    }
+    params.set('returnTo', destination);
+    router.push(`/login?${params.toString()}`);
   };
 
   const handleLogout = async () => {
@@ -120,6 +138,9 @@ export default function ProfileMenu() {
                 <button type="button" className="profile-menu-item" onClick={() => openTo('/account')} aria-label="Account">
                   Account
                 </button>
+                <button type="button" className="profile-menu-item" onClick={() => openTo('/account/saved')} aria-label="My saved items">
+                  My Saved Items
+                </button>
                 <button type="button" className="profile-menu-item" onClick={() => openTo('/journal/write')} aria-label="Write Journal">
                   Write Journal
                 </button>
@@ -132,10 +153,10 @@ export default function ProfileMenu() {
               </>
             ) : (
               <>
-                <button type="button" className="profile-menu-item" onClick={() => openTo('/login')} aria-label="Sign in">
+                <button type="button" className="profile-menu-item" onClick={() => openAuthPage()} aria-label="Sign in">
                   Sign In
                 </button>
-                <button type="button" className="profile-menu-item" onClick={() => openTo('/login?view=create')} aria-label="Create account">
+                <button type="button" className="profile-menu-item" onClick={() => openAuthPage('create')} aria-label="Create account">
                   Create Account
                 </button>
               </>

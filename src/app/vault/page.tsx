@@ -3,8 +3,8 @@
 import React from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import ProductCard from '@/components/products/ProductCard';
-import { vaultProducts } from '@/data/products/vault';
+import CollectionBrowser from '@/components/collections/CollectionBrowser';
+import { vaultCollectionConfig } from '@/lib/collectionConfigs';
 import Container from '@/components/ui/Container';
 
 /**
@@ -32,17 +32,16 @@ export default function VaultPage() {
 
         {/* Product Grid */}
         <section className="category-products">
-          <Container>
-            <div className="product-grid">
-              {vaultProducts.map((product, i) => (
-                <div
-                  key={product.id}
-                  className={`product-grid-item ${i === 8 ? 'product-grid-item--span-full' : ''}`}
-                >
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
+          <Container size="large">
+            <CollectionBrowser
+              config={vaultCollectionConfig}
+              className="collection-browser-section"
+              filterBarClassName="stories-filter-bar"
+              filterPillClassName="stories-filter-pill"
+              gridClassName="product-grid"
+              actionClassName="stories-showcase-action"
+              actionLinkClassName="stories-showcase-all-link"
+            />
           </Container>
         </section>
       </main>

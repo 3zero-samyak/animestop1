@@ -3,7 +3,8 @@
 import { createContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { DisplayMode } from '@/types/displayMode';
 
-const STORAGE_KEY = 'animestop-display-mode';
+export const DISPLAY_MODE_STORAGE_KEY = 'animestop-display-mode';
+export const DISPLAY_MODE_COOKIE_KEY = 'animestop-display-mode';
 
 type ModeContextValue = {
   mode: DisplayMode;
@@ -13,25 +14,38 @@ type ModeContextValue = {
 
 export const ModeContext = createContext<ModeContextValue | null>(null);
 
-function getInitialMode(): DisplayMode {
-  if (typeof window === 'undefined') return 'anime';
-  
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return (stored === 'manga' || stored === 'anime') ? stored : 'anime';
+function normalizeMode(value: string | null | undefined): DisplayMode {
+  return value === 'manga' ? 'manga' : 'anime';
 }
 
-export function ModeProvider({ children }: { children: ReactNode }) {
-  const [mode, setModeState] = useState<DisplayMode>(getInitialMode);
+export function ModeProvider({
+  children,
+  initialMode = 'anime',
+}: {
+  children: ReactNode;
+  initialMode?: DisplayMode;
+}) {
+  const [mode, setModeState] = useState<DisplayMode>(initialMode);
 
   useEffect(() => {
-    // Sync root attribute on mount
-    document.documentElement.dataset.displayMode = mode;
+    try {
+      const storedMode = normalizeMode(localStorage.getItem(DISPLAY_MODE_STORAGE_KEY));
+      const nextMode = storedMode === mode ? mode : storedMode;
+      document.documentElement.dataset.displayMode = nextMode;
+      localStorage.setItem(DISPLAY_MODE_STORAGE_KEY, nextMode);
+      document.cookie = `${DISPLAY_MODE_COOKIE_KEY}=${nextMode}; path=/; max-age=31536000; samesite=lax`;
+    } catch {
+      document.documentElement.dataset.displayMode = mode;
+    }
   }, [mode]);
 
   const setMode = useCallback((newMode: DisplayMode) => {
     setModeState(newMode);
     document.documentElement.dataset.displayMode = newMode;
-    localStorage.setItem(STORAGE_KEY, newMode);
+    try {
+      localStorage.setItem(DISPLAY_MODE_STORAGE_KEY, newMode);
+      document.cookie = `${DISPLAY_MODE_COOKIE_KEY}=${newMode}; path=/; max-age=31536000; samesite=lax`;
+    } catch {}
   }, []);
 
   const toggleMode = useCallback(() => {

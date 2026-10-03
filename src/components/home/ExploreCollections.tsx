@@ -61,6 +61,7 @@ export default function ExploreCollections() {
                   src={collection.image}
                   alt={collection.title}
                   fill
+                  sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 25vw"
                   style={{ objectFit: 'cover' }}
                   data-mode-sensitive="true"
                 />

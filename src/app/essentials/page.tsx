@@ -1,9 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { 
-  ArrowRight, 
   Shirt, 
   Lock, 
   Truck, 
@@ -12,12 +10,11 @@ import {
   BadgeCheck,
   Sparkles,
   Gift,
-  Filter
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import ProductCard from '@/components/products/ProductCard';
-import { essentialsProducts } from '@/data/products/essentials';
+import CollectionBrowser from '@/components/collections/CollectionBrowser';
+import { essentialsCollectionConfig } from '@/lib/collectionConfigs';
 import Container from '@/components/ui/Container';
 import NewsletterSection from '@/components/home/NewsletterSection';
 
@@ -82,65 +79,22 @@ export default function EssentialsPage() {
 
         {/* Filters and Sorting */}
         <section className="essentials-controls-section">
-          <Container>
-            <div className="essentials-controls">
-              <div className="essentials-filter-bar" role="toolbar" aria-label="Essentials filters">
-                {[
-                  'All Essentials',
-                  'Apparel',
-                  'Accessories',
-                  'Drinkware',
-                  'Bags',
-                  'Desk & Living',
-                  'Tech',
-                  'Lifestyle',
-                  'Filter',
-                ].map((label) => (
-                  <button
-                    key={label}
-                    type="button"
-                    className="essentials-filter-pill"
-                    aria-pressed={label === 'All Essentials'}
-                  >
-                    {label === 'Filter' ? <Filter className="w-4 h-4" /> : label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </Container>
-        </section>
-
-        {/* Product Grid - Exactly 16 Cards */}
-        <section className="essentials-products-section">
-          <Container>
-            <div className="essentials-product-grid">
-              {essentialsProducts.map((product, i) => (
-                <div
-                  key={product.id}
-                  className={`product-grid-item ${i === 8 ? 'product-grid-item--span-full' : ''}`}
-                >
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
-
-            {/* Explore Essentials CTA */}
-            <div className="essentials-explore-action">
-              <Link
-                href="/essentials"
-                className="category-explore-all-link"
-                data-no-route-transition="true"
-              >
-                Explore Essentials
-                <ArrowRight className="w-5 h-5" strokeWidth={2.5} />
-              </Link>
-            </div>
+          <Container size="large">
+            <CollectionBrowser
+              config={essentialsCollectionConfig}
+              className="collection-browser-section"
+              filterBarClassName="essentials-filter-bar"
+              filterPillClassName="essentials-filter-pill"
+              gridClassName="essentials-product-grid"
+              actionClassName="essentials-explore-action"
+              actionLinkClassName="category-explore-all-link"
+            />
           </Container>
         </section>
 
         {/* Benefits Panel */}
         <section className="essentials-benefits-section">
-          <Container>
+          <Container size="large">
             <div className="essentials-benefits-panel">
               <div className="essentials-benefits-list">
                 <div className="essentials-benefit">

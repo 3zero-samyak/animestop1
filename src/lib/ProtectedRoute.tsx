@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from './AuthProvider';
+import { buildCurrentRelativeUrl, persistAuthReturnTo } from './authNavigation';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -23,8 +24,12 @@ export function ProtectedRoute({
 
   useEffect(() => {
     if (!loading && !user) {
+      const search = typeof window !== 'undefined' ? window.location.search : '';
+      const hash = typeof window !== 'undefined' ? window.location.hash : '';
+      const destination = buildCurrentRelativeUrl(pathname, search, hash);
+      persistAuthReturnTo(destination);
       const params = new URLSearchParams();
-      params.set('returnTo', pathname);
+      params.set('returnTo', destination);
       router.replace(`/login?${params.toString()}`);
     }
   }, [loading, user, router, pathname]);

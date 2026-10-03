@@ -4,11 +4,12 @@ import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/AuthProvider';
 import { getAuthErrorMessage } from '@/lib/authErrors';
+import { consumeAuthReturnTo, getSafeReturnTo, persistAuthToast } from '@/lib/authNavigation';
 
 export default function CreateAccountForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { signUp, sendVerificationEmail } = useAuth();
+  const { signUp, signInWithGoogle, sendVerificationEmail } = useAuth();
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -23,6 +24,9 @@ export default function CreateAccountForm() {
   const [verificationError, setVerificationError] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [resending, setResending] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const getDestination = () => getSafeReturnTo(searchParams.get('returnTo'), consumeAuthReturnTo('/account'));
 
   const validate = () => {
     if (!name) return 'Name is required';
@@ -69,15 +73,7 @@ export default function CreateAccountForm() {
   }, [resendCooldown]);
 
   const handleContinue = () => {
-    const returnTo = searchParams.get('returnTo');
-    const safeReturnTo = 
-      returnTo && 
-      returnTo.startsWith('/') && 
-      !returnTo.startsWith('//')
-        ? returnTo 
-        : '/account';
-    
-    router.replace(safeReturnTo);
+    router.replace(getDestination());
   };
 
   const handleResend = async () => {
@@ -97,6 +93,39 @@ export default function CreateAccountForm() {
     } finally {
       setResending(false);
     }
+  };
+
+  const handleGoogleSignIn = async () => {
+    if (googleLoading) {
+      return;
+    }
+
+    if (!acceptedTerms) {
+      setError('Please accept the terms before continuing with Google.');
+      return;
+    }
+
+    setGoogleLoading(true);
+    setError(null);
+
+    try {
+      const credential = await signInWithGoogle();
+      if (credential) {
+        persistAuthToast({
+          kind: 'success',
+          message: credential.user.emailVerified
+            ? 'Signed in successfully. Email verified.'
+            : 'Signed in successfully. Please verify your email.',
+        });
+        router.replace(getDestination());
+      }
+    } catch (err) {
+      setError(getAuthErrorMessage(err, 'google'));
+      setGoogleLoading(false);
+      return;
+    }
+
+    setGoogleLoading(false);
   };
 
   if (createdEmail) {
@@ -246,11 +275,26 @@ export default function CreateAccountForm() {
           <button 
             type="submit" 
             className="account-access-button" 
-            disabled={!acceptedTerms || loading}
+            disabled={!acceptedTerms || loading || googleLoading}
           >
             {loading ? 'CREATING ACCOUNT...' : 'Create Account'}
           </button>
         </div>
+
+        <div className="auth-divider" aria-hidden="true">
+          <span>OR</span>
+        </div>
+
+        <button
+          type="button"
+          className="account-access-button account-access-button-google"
+          onClick={handleGoogleSignIn}
+          disabled={!acceptedTerms || loading || googleLoading}
+          aria-label="Continue with Google"
+        >
+          <span className="auth-google-icon" aria-hidden="true">G</span>
+          {googleLoading ? 'CONTINUING...' : 'Continue with Google'}
+        </button>
       </form>
 
       <div className="auth-footer">
@@ -264,7 +308,7 @@ export default function CreateAccountForm() {
               : '/login?view=signin';
             router.push(url);
           }}
-          disabled={loading}
+          disabled={loading || googleLoading}
         >
           Sign In
         </button>

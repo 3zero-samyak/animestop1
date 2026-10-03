@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Bookmark } from 'lucide-react';
 import ModeImage from '@/components/media/ModeImage';
+import { useSavedItems } from '@/components/saved/SavedItemsProvider';
 import type { ProductDetail } from '@/types/product';
 
 interface ProductCardProps {
@@ -18,7 +19,10 @@ function makeSlug(input: string) {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { isSaved, toggleItem } = useSavedItems();
   const slug = product.id ? makeSlug(product.id) : makeSlug(product.title || 'build');
+  const collectionKey = product.collectionKey ?? 'stories';
+  const saved = isSaved(collectionKey, product.id);
 
   return (
     <article
@@ -89,12 +93,16 @@ export default function ProductCard({ product }: ProductCardProps) {
       <button
         type="button"
         className="product-card-bookmark"
-        aria-label={`Bookmark ${product.title}`}
-        onClick={(e) => {
+        aria-label={saved ? `Remove saved product ${product.title}` : `Save product ${product.title}`}
+        aria-pressed={saved}
+        onClick={async (e) => {
           e.stopPropagation();
+          e.preventDefault();
+          await toggleItem(collectionKey, product.id);
         }}
+        style={{ color: saved ? 'var(--accent-primary)' : undefined }}
       >
-        <Bookmark size={20} strokeWidth={2} aria-hidden="true" />
+        <Bookmark size={20} strokeWidth={2} aria-hidden="true" fill={saved ? 'currentColor' : 'none'} />
       </button>
     </article>
   );

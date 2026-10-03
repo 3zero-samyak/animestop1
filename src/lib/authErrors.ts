@@ -1,5 +1,5 @@
 // Firebase auth error mapper
-export function getAuthErrorMessage(error: unknown, context?: 'passwordReset' | 'verification'): string {
+export function getAuthErrorMessage(error: unknown, context?: 'passwordReset' | 'verification' | 'google'): string {
   if (!error || typeof error !== 'object' || !('code' in error)) {
     return 'An unexpected error occurred. Please try again.';
   }
@@ -34,12 +34,32 @@ export function getAuthErrorMessage(error: unknown, context?: 'passwordReset' | 
     
     case 'auth/network-request-failed':
       return 'Network error. Check your connection and try again.';
+
+    case 'auth/popup-closed-by-user':
+      return 'Google sign-in was canceled.';
+
+    case 'auth/popup-blocked':
+      return 'The Google sign-in popup was blocked. We will try a full-page sign-in instead.';
+
+    case 'auth/cancelled-popup-request':
+      return 'Google sign-in is already in progress.';
+
+    case 'auth/unauthorized-domain':
+      return 'This domain is not authorized for Google sign-in. Check Firebase Authentication settings.';
+
+    case 'auth/account-exists-with-different-credential':
+      return 'An account already exists with this email using a different sign-in method. Sign in with that method first.';
+
+    case 'auth/operation-not-supported-in-this-environment':
+      return 'Google sign-in popup is not available here. Try again or use a full-page sign-in flow.';
     
     case 'auth/user-disabled':
       return 'This account has been disabled.';
     
     case 'auth/operation-not-allowed':
-      return 'This operation is not allowed.';
+      return context === 'google'
+        ? 'Google sign-in is not enabled for this Firebase project.'
+        : 'This operation is not allowed.';
     
     case 'auth/requires-recent-login':
       return 'For security, please confirm your password and try again.';

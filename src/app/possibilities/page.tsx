@@ -10,13 +10,12 @@ import {
   Lightbulb, 
   Users, 
   PenLine,
-  Feather,
-  Filter
+  Feather
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import ProductCard from '@/components/products/ProductCard';
-import { possibilitiesProducts } from '@/data/products/possibilities';
+import CollectionBrowser from '@/components/collections/CollectionBrowser';
+import { possibilitiesCollectionConfig } from '@/lib/collectionConfigs';
 import NewsletterSection from '@/components/home/NewsletterSection';
 
 /**
@@ -94,52 +93,15 @@ export default function PossibilitiesPage() {
               </div>
             </div>
 
-            {/* Filters */}
-            <div className="possibilities-filter-bar" role="toolbar" aria-label="Possibilities filters">
-              {[
-                'All Possibilities',
-                'Alternate Worlds',
-                'Character Paths',
-                'Crossover Ideas',
-                'Reimagined Battles',
-                'Future Worlds',
-                'Community Concepts',
-                'Filter',
-              ].map((label) => (
-                <button
-                  key={label}
-                  type="button"
-                  className="possibilities-filter-pill"
-                  aria-pressed={label === 'All Possibilities'}
-                >
-                  {label === 'Filter' ? <Filter className="w-4 h-4" /> : label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Product Grid - Exactly 16 Cards */}
-        <section id="possibilities-grid" className="possibilities-products-section">
-          <div className="possibilities-container">
-            <div className="possibilities-grid">
-              {possibilitiesProducts.map((product, i) => (
-                <div
-                  key={product.id}
-                  className={`product-grid-item ${i === 8 ? 'product-grid-item--span-full' : ''}`}
-                >
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
-
-            {/* Explore Possibilities CTA */}
-            <div className="possibilities-explore-action">
-              <Link href="/possibilities" className="possibilities-explore-link">
-                Explore Possibilities
-                <ArrowRight className="w-5 h-5" strokeWidth={2.5} />
-              </Link>
-            </div>
+            <CollectionBrowser
+              config={possibilitiesCollectionConfig}
+              className="collection-browser-section"
+              filterBarClassName="possibilities-filter-bar"
+              filterPillClassName="possibilities-filter-pill"
+              gridClassName="possibilities-grid"
+              actionClassName="possibilities-explore-action"
+              actionLinkClassName="possibilities-explore-link"
+            />
           </div>
         </section>
 

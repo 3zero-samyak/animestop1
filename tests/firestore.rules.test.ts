@@ -61,6 +61,33 @@ describe('Firestore Security Rules - users/{uid}', () => {
     updatedAt: serverTimestamp(),
     ...overrides,
   });
+
+  const validSavedItem = (overrides: Record<string, unknown> = {}) => ({
+    collection: 'stories',
+    productId: 'one-piece-no-enemies',
+    createdAt: serverTimestamp(),
+    ...overrides,
+  });
+
+  const validJourneySearch = (overrides: Record<string, unknown> = {}) => ({
+    query: 'naruto',
+    scope: 'stories',
+    updatedAt: serverTimestamp(),
+    ...overrides,
+  });
+
+  const validJourneyView = (overrides: Record<string, unknown> = {}) => ({
+    collection: 'stories',
+    productId: 'one-piece-no-enemies',
+    updatedAt: serverTimestamp(),
+    ...overrides,
+  });
+
+  const validJourneyPreference = (overrides: Record<string, unknown> = {}) => ({
+    recordingPaused: false,
+    updatedAt: serverTimestamp(),
+    ...overrides,
+  });
   
   // ==================================================
   // UNAUTHENTICATED ACCESS
@@ -350,6 +377,206 @@ describe('Firestore Security Rules - users/{uid}', () => {
       const userARef = doc(userBDb, 'users', USER_A_UID);
       
       await assertFails(deleteDoc(userARef));
+    });
+  });
+
+  // ==================================================
+  // SAVED ITEMS RULES
+  // ==================================================
+
+  describe('savedItems rules', () => {
+    test('Unauthenticated user cannot save a product', async () => {
+      const unauthedDb = testEnv.unauthenticatedContext().firestore();
+      await assertFails(setDoc(doc(unauthedDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), validSavedItem()));
+    });
+
+    test('Authenticated user can save a valid product', async () => {
+      const userDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertSucceeds(setDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), validSavedItem()));
+    });
+
+    test('Owner can read their saved items', async () => {
+      await testEnv.withSecurityRulesDisabled(async (context) => {
+        await setDoc(doc(context.firestore(), 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), {
+          collection: 'stories',
+          productId: 'one-piece-no-enemies',
+          createdAt: new Date(),
+        });
+      });
+
+      const userDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertSucceeds(getDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies')));
+      await assertSucceeds(getDocs(collection(userDb, 'users', USER_A_UID, 'savedItems')));
+    });
+
+    test('Another user cannot read saved items', async () => {
+      await testEnv.withSecurityRulesDisabled(async (context) => {
+        await setDoc(doc(context.firestore(), 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), {
+          collection: 'stories',
+          productId: 'one-piece-no-enemies',
+          createdAt: new Date(),
+        });
+      });
+
+      const otherDb = testEnv.authenticatedContext(USER_B_UID).firestore();
+      await assertFails(getDoc(doc(otherDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies')));
+      await assertFails(getDocs(collection(otherDb, 'users', USER_A_UID, 'savedItems')));
+    });
+
+    test('Another user cannot create or delete the owner\'s saved items', async () => {
+      const otherDb = testEnv.authenticatedContext(USER_B_UID).firestore();
+      await assertFails(setDoc(doc(otherDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), validSavedItem()));
+
+      await testEnv.withSecurityRulesDisabled(async (context) => {
+        await setDoc(doc(context.firestore(), 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), {
+          collection: 'stories',
+          productId: 'one-piece-no-enemies',
+          createdAt: new Date(),
+        });
+      });
+
+      await assertFails(deleteDoc(doc(otherDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies')));
+    });
+
+    test('Invalid collections are rejected', async () => {
+      const userDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertFails(setDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'bad__item'), validSavedItem({ collection: 'journal' })));
+    });
+
+    test('Invalid product IDs or mismatched document IDs are rejected', async () => {
+      const userDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertFails(setDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__naruto-itachi'), validSavedItem()));
+      await assertFails(setDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__'), validSavedItem({ productId: '' })));
+    });
+
+    test('Unexpected document fields are rejected', async () => {
+      const userDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertFails(setDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), validSavedItem({ uid: USER_A_UID })));
+    });
+
+    test('Invalid timestamps are rejected', async () => {
+      const userDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertFails(setDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), {
+        collection: 'stories',
+        productId: 'one-piece-no-enemies',
+        createdAt: new Date('2024-01-01'),
+      }));
+    });
+
+    test('Normal users cannot arbitrarily update saved records', async () => {
+      await testEnv.withSecurityRulesDisabled(async (context) => {
+        await setDoc(doc(context.firestore(), 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), {
+          collection: 'stories',
+          productId: 'one-piece-no-enemies',
+          createdAt: new Date(),
+        });
+      });
+
+      const userDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertFails(setDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), {
+        collection: 'stories',
+        productId: 'naruto-itachi',
+      }, { merge: true }));
+    });
+
+    test('Owners can remove their own saved items', async () => {
+      const userDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertSucceeds(setDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), validSavedItem()));
+      await assertSucceeds(deleteDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies')));
+    });
+
+    test('Unverified authenticated users can save products', async () => {
+      const userDb = testEnv.authenticatedContext(USER_A_UID, { email: USER_A_EMAIL, email_verified: false }).firestore();
+      await assertSucceeds(setDoc(doc(userDb, 'users', USER_A_UID, 'savedItems', 'stories__one-piece-no-enemies'), validSavedItem()));
+    });
+  });
+
+  // ==================================================
+  // JOURNEY RULES
+  // ==================================================
+
+  describe('journey rules', () => {
+    test('Owner-only journeySearches access', async () => {
+      const ownerDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      const otherDb = testEnv.authenticatedContext(USER_B_UID).firestore();
+
+      await assertSucceeds(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeySearches', 'stories__naruto'), validJourneySearch()));
+      await assertSucceeds(getDoc(doc(ownerDb, 'users', USER_A_UID, 'journeySearches', 'stories__naruto')));
+      await assertFails(getDoc(doc(otherDb, 'users', USER_A_UID, 'journeySearches', 'stories__naruto')));
+    });
+
+    test('Valid journey view record succeeds and invalid deterministic ID fails', async () => {
+      const ownerDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertSucceeds(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeyViews', 'stories__one-piece-no-enemies'), validJourneyView()));
+      await assertFails(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeyViews', 'stories__naruto-itachi'), validJourneyView()));
+    });
+
+    test('Invalid journey data is rejected', async () => {
+      const ownerDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertFails(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeySearches', 'bad'), validJourneySearch({ scope: 'account' })));
+      await assertFails(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeyViews', 'stories__one-piece-no-enemies'), validJourneyView({ extra: true })));
+    });
+
+    test('Journey preference can be created and updated by owner only', async () => {
+      const ownerDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      const otherDb = testEnv.authenticatedContext(USER_B_UID).firestore();
+
+      await assertSucceeds(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeyPreferences', 'journey'), validJourneyPreference()));
+      await assertSucceeds(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeyPreferences', 'journey'), validJourneyPreference({ recordingPaused: true }), { merge: true }));
+      await assertFails(setDoc(doc(otherDb, 'users', USER_A_UID, 'journeyPreferences', 'journey'), validJourneyPreference({ recordingPaused: true }), { merge: true }));
+    });
+
+    test('Recording enabled permits valid Journey activity', async () => {
+      const ownerDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertSucceeds(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeyPreferences', 'journey'), validJourneyPreference({ recordingPaused: false })));
+      await assertSucceeds(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeySearches', 'stories__naruto'), validJourneySearch()));
+      await assertSucceeds(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeyViews', 'stories__one-piece-no-enemies'), validJourneyView()));
+    });
+
+    test('Recording paused blocks new search and view records but preserves reads and deletes', async () => {
+      await testEnv.withSecurityRulesDisabled(async (context) => {
+        await setDoc(doc(context.firestore(), 'users', USER_A_UID, 'journeyPreferences', 'journey'), {
+          recordingPaused: true,
+          updatedAt: new Date(),
+        });
+        await setDoc(doc(context.firestore(), 'users', USER_A_UID, 'journeySearches', 'stories__naruto'), {
+          query: 'naruto',
+          scope: 'stories',
+          updatedAt: new Date(),
+        });
+      });
+
+      const ownerDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertFails(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeySearches', 'stories__bleach'), validJourneySearch({ query: 'bleach' })));
+      await assertFails(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeyViews', 'stories__one-piece-no-enemies'), validJourneyView()));
+      await assertSucceeds(getDoc(doc(ownerDb, 'users', USER_A_UID, 'journeySearches', 'stories__naruto')));
+      await assertSucceeds(deleteDoc(doc(ownerDb, 'users', USER_A_UID, 'journeySearches', 'stories__naruto')));
+    });
+
+    test('Different user accounts maintain independent recording preferences', async () => {
+      await testEnv.withSecurityRulesDisabled(async (context) => {
+        await setDoc(doc(context.firestore(), 'users', USER_A_UID, 'journeyPreferences', 'journey'), {
+          recordingPaused: true,
+          updatedAt: new Date(),
+        });
+      });
+
+      const userADb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      const userBDb = testEnv.authenticatedContext(USER_B_UID).firestore();
+      await assertFails(setDoc(doc(userADb, 'users', USER_A_UID, 'journeySearches', 'stories__naruto'), validJourneySearch()));
+      await assertSucceeds(setDoc(doc(userBDb, 'users', USER_B_UID, 'journeySearches', 'stories__naruto'), validJourneySearch()));
+    });
+
+    test('Owner can clear journey history by deleting records', async () => {
+      const ownerDb = testEnv.authenticatedContext(USER_A_UID).firestore();
+      await assertSucceeds(setDoc(doc(ownerDb, 'users', USER_A_UID, 'journeySearches', 'stories__naruto'), validJourneySearch()));
+      await assertSucceeds(deleteDoc(doc(ownerDb, 'users', USER_A_UID, 'journeySearches', 'stories__naruto')));
+    });
+
+    test('Guests cannot record journey data', async () => {
+      const guestDb = testEnv.unauthenticatedContext().firestore();
+      await assertFails(setDoc(doc(guestDb, 'users', USER_A_UID, 'journeyViews', 'stories__one-piece-no-enemies'), validJourneyView()));
+      await assertFails(setDoc(doc(guestDb, 'users', USER_A_UID, 'journeyPreferences', 'journey'), validJourneyPreference()));
     });
   });
 

@@ -7,11 +7,15 @@ import MobileNavigation from './MobileNavigation';
 import ModeToggle from '@/components/mode/ModeToggle';
 import ProfileMenu from './ProfileMenu';
 import DesktopNavigation from './DesktopNavigation';
+import CatalogSearchOverlay from '@/components/search/CatalogSearchOverlay';
 import { useAuth } from '@/lib/AuthProvider';
+import { useJourney } from '@/components/journey/JourneyProvider';
 import { addSearchQuery } from '@/lib/searchHistory';
+import { recordJourneySearch } from '@/lib/journey';
 
 export default function Header() {
   const { user } = useAuth();
+  const { preference, preferenceResolved } = useJourney();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -68,20 +72,30 @@ export default function Header() {
     }
   }, [menuOpen]);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Search functionality placeholder
-    if (searchQuery.trim()) {
-      // Record search for user tracking
+  const toggleSearch = () => {
+    setSearchOpen(!searchOpen);
+    if (searchOpen && searchQuery.trim()) {
       try {
         if (user) addSearchQuery(searchQuery.trim());
       } catch {}
-      console.log('Search query:', searchQuery);
     }
   };
 
-  const toggleSearch = () => {
-    setSearchOpen(!searchOpen);
+  const handleSearchSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const normalized = searchQuery.trim();
+    if (!normalized) {
+      return;
+    }
+
+    try {
+      if (user) {
+        addSearchQuery(normalized);
+        if (preferenceResolved && !preference.recordingPaused) {
+          await recordJourneySearch(user.uid, normalized, 'global');
+        }
+      }
+    } catch {}
   };
 
   const toggleMenu = () => {
@@ -140,33 +154,12 @@ export default function Header() {
 
               {/* Search Overlay */}
               {searchOpen && (
-                <div className="site-header-search-overlay">
-                  <div className="site-header-search-content">
-                    <form onSubmit={handleSearchSubmit}>
-                      <label htmlFor="site-search-input" className="sr-only">
-                        Search AnimeStop
-                      </label>
-                      <div className="site-header-search-input-wrapper">
-                        <input
-                          ref={searchInputRef}
-                          id="site-search-input"
-                          type="text"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="Search anime stories..."
-                          className="site-header-search-input"
-                        />
-                        <button
-                          type="button"
-                          className="site-header-search-close"
-                          onClick={() => setSearchOpen(false)}
-                          aria-label="Close search"
-                        >
-                          <X size={20} strokeWidth={2} />
-                        </button>
-                      </div>
-                    </form>
-                  </div>
+                <div onSubmitCapture={(event) => void handleSearchSubmit(event)}>
+                  <CatalogSearchOverlay
+                    query={searchQuery}
+                    onChange={(value) => setSearchQuery(value)}
+                    onClose={() => setSearchOpen(false)}
+                  />
                 </div>
               )}
             </div>

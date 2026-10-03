@@ -2,10 +2,15 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
+  AuthError,
+  GoogleAuthProvider,
   User,
   UserCredential,
   createUserWithEmailAndPassword,
+  getRedirectResult,
   sendEmailVerification,
+  signInWithPopup,
+  signInWithRedirect,
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   onAuthStateChanged,
@@ -14,6 +19,7 @@ import {
   reload,
 } from 'firebase/auth';
 import { auth } from './firebase';
+import { persistAuthToast } from './authNavigation';
 import { ensureUserProfile, syncUserProfile } from './userProfile';
 
 type SignUpResult = {
@@ -30,6 +36,7 @@ export type AuthContextType = {
   isEmailVerified: boolean;
   signIn: (email: string, password: string) => Promise<UserCredential>;
   signUp: (email: string, password: string, displayName?: string) => Promise<SignUpResult>;
+  signInWithGoogle: () => Promise<UserCredential | null>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
@@ -42,9 +49,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const signupInProgressRef = React.useRef(false);
+  const googleAuthInProgressRef = React.useRef(false);
+  const previousEmailVerifiedRef = React.useRef(false);
 
-  const setFreshUser = () => {
+  const setFreshUser = React.useCallback(() => {
     setUser(auth.currentUser ? { ...auth.currentUser } : null);
+  }, []);
+
+  const getGoogleProvider = () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    return provider;
+  };
+
+  const syncSignedInUser = React.useCallback(async (signedInUser: User) => {
+    await signedInUser.getIdToken(true);
+
+    try {
+      await ensureUserProfile(signedInUser);
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development' && error && typeof error === 'object') {
+        const firestoreError = error as { code?: string; message?: string };
+        console.error(`[UserProfile] code: ${firestoreError.code ?? 'unknown'}`);
+        console.error(`[UserProfile] message: ${firestoreError.message ?? 'Unknown Firestore error'}`);
+      }
+    }
+
+    setFreshUser();
+  }, [setFreshUser]);
+
+  const signInWithGoogleRedirect = async (): Promise<null> => {
+    googleAuthInProgressRef.current = true;
+    await signInWithRedirect(auth, getGoogleProvider());
+    return null;
   };
 
   const getVerificationActionCodeSettings = (): { url: string; handleCodeInApp: boolean } => {
@@ -86,10 +123,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    let mounted = true;
+
+    const completeRedirectSignIn = async () => {
+      try {
+        const redirectResult = await getRedirectResult(auth);
+        if (redirectResult?.user && mounted) {
+          await syncSignedInUser(redirectResult.user);
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development' && error && typeof error === 'object') {
+          const authError = error as { code?: string; message?: string };
+          console.error(`[Google sign-in redirect] code: ${authError.code ?? 'unknown'}`);
+          console.error(`[Google sign-in redirect] message: ${authError.message ?? 'Unknown Firebase error'}`);
+        }
+      } finally {
+        googleAuthInProgressRef.current = false;
+      }
+    };
+
+    void completeRedirectSignIn();
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
 
-      if (firebaseUser && !signupInProgressRef.current) {
+       if (firebaseUser && firebaseUser.emailVerified && !previousEmailVerifiedRef.current) {
+        const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+        if (params?.get('verification') === 'complete') {
+          persistAuthToast({ kind: 'verified', message: 'Email verified successfully!' });
+          params.delete('verification');
+          const nextQuery = params.toString();
+          const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}${window.location.hash}`;
+          window.history.replaceState({}, '', nextUrl);
+        }
+      }
+
+      previousEmailVerifiedRef.current = firebaseUser?.emailVerified ?? false;
+
+      if (firebaseUser && !signupInProgressRef.current && !googleAuthInProgressRef.current) {
         try {
           await firebaseUser.getIdToken(true);
           await ensureUserProfile(firebaseUser);
@@ -105,8 +176,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
 
-    return () => unsubscribe();
-  }, []);
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
+  }, [syncSignedInUser]);
 
   const signIn = async (email: string, password: string): Promise<UserCredential> => {
     const normalizedEmail = email.trim();
@@ -170,6 +244,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signInWithGoogle = async (): Promise<UserCredential | null> => {
+    googleAuthInProgressRef.current = true;
+
+    try {
+      const credential = await signInWithPopup(auth, getGoogleProvider());
+      await syncSignedInUser(credential.user);
+      return credential;
+    } catch (error) {
+      const authError = error as AuthError;
+
+      if (authError.code === 'auth/popup-closed-by-user') {
+        googleAuthInProgressRef.current = false;
+        throw error;
+      }
+
+      if (authError.code === 'auth/popup-blocked' || authError.code === 'auth/cancelled-popup-request') {
+        googleAuthInProgressRef.current = false;
+        return signInWithGoogleRedirect();
+      }
+
+      googleAuthInProgressRef.current = false;
+      throw error;
+    } finally {
+      if (auth.currentUser) {
+        googleAuthInProgressRef.current = false;
+      }
+    }
+  };
+
   const logout = async (): Promise<void> => {
     await firebaseSignOut(auth);
   };
@@ -213,6 +316,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isEmailVerified: user?.emailVerified ?? false,
     signIn,
     signUp,
+    signInWithGoogle,
     logout,
     resetPassword,
     sendVerificationEmail,

@@ -218,6 +218,20 @@ export default function AccountPage() {
               </button>
             </section>
 
+            <section className="account-section">
+              <h2 className="account-section-title">My Saved Items</h2>
+              <p className="account-section-desc">
+                View the Stories, Essentials, Possibilities and Vault products you have bookmarked across AnimeStop.
+              </p>
+              <button
+                type="button"
+                onClick={() => router.push('/account/saved')}
+                className="account-button account-button-primary"
+              >
+                MY SAVED ITEMS
+              </button>
+            </section>
+
             {isAdmin && (
               <section className="account-section">
                 <h2 className="account-section-title">Admin Moderation</h2>

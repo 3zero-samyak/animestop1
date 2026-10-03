@@ -4,11 +4,12 @@ import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/AuthProvider';
 import { getAuthErrorMessage } from '@/lib/authErrors';
+import { consumeAuthReturnTo, getSafeReturnTo, persistAuthToast } from '@/lib/authNavigation';
 
 export default function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const returnTo = searchParams.get('returnTo');
   
   const [email, setEmail] = useState('');
@@ -17,6 +18,9 @@ export default function SignInForm() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const getDestination = () => getSafeReturnTo(returnTo, consumeAuthReturnTo('/account'));
 
   const validate = () => {
     if (!email || !/.+@.+\..+/.test(email)) return 'Please enter a valid email';
@@ -38,22 +42,51 @@ export default function SignInForm() {
     setError(null);
 
     try {
-      await signIn(email, password);
-      
-      // Handle return path
-      const returnTo = searchParams.get('returnTo');
-      const safeReturnTo = 
-        returnTo && 
-        returnTo.startsWith('/') && 
-        !returnTo.startsWith('//')
-          ? returnTo 
-          : '/';
-      
-      router.replace(safeReturnTo);
+      const credential = await signIn(email, password);
+      persistAuthToast({
+        kind: 'success',
+        message: credential.user.emailVerified
+          ? 'Signed in successfully. Email verified.'
+          : 'Signed in successfully. Please verify your email.',
+      });
+      router.replace(getDestination());
     } catch (err) {
       setError(getAuthErrorMessage(err));
       setLoading(false);
     }
+  };
+
+  const handleGoogleSignIn = async () => {
+    if (googleLoading) {
+      return;
+    }
+
+    if (!acceptedTerms) {
+      setError('Please accept the terms before continuing with Google.');
+      return;
+    }
+
+    setGoogleLoading(true);
+    setError(null);
+
+    try {
+      const credential = await signInWithGoogle();
+      if (credential) {
+        persistAuthToast({
+          kind: 'success',
+          message: credential.user.emailVerified
+            ? 'Signed in successfully. Email verified.'
+            : 'Signed in successfully. Please verify your email.',
+        });
+        router.replace(getDestination());
+      }
+    } catch (err) {
+      setError(getAuthErrorMessage(err, 'google'));
+      setGoogleLoading(false);
+      return;
+    }
+
+    setGoogleLoading(false);
   };
 
   return (
@@ -128,7 +161,7 @@ export default function SignInForm() {
           <button 
             type="submit" 
             className="account-access-button" 
-            disabled={!acceptedTerms || loading}
+            disabled={!acceptedTerms || loading || googleLoading}
           >
             {loading ? 'SIGNING IN...' : 'Sign In'}
           </button>
@@ -141,11 +174,26 @@ export default function SignInForm() {
                 : '/login?view=create';
               router.push(url);
             }}
-            disabled={loading}
+            disabled={loading || googleLoading}
           >
             Create Account
           </button>
         </div>
+
+        <div className="auth-divider" aria-hidden="true">
+          <span>OR</span>
+        </div>
+
+        <button
+          type="button"
+          className="account-access-button account-access-button-google"
+          onClick={handleGoogleSignIn}
+          disabled={!acceptedTerms || loading || googleLoading}
+          aria-label="Continue with Google"
+        >
+          <span className="auth-google-icon" aria-hidden="true">G</span>
+          {googleLoading ? 'CONTINUING...' : 'Continue with Google'}
+        </button>
       </form>
     </div>
   );

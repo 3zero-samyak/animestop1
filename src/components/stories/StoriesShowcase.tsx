@@ -2,9 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Filter } from 'lucide-react';
-import ProductCard from '@/components/products/ProductCard';
-import { storiesProducts } from '@/data/products/stories';
+import { ArrowRight } from 'lucide-react';
+import CollectionBrowser from '@/components/collections/CollectionBrowser';
+import { storiesCollectionConfig } from '@/lib/collectionConfigs';
 
 export default function StoriesShowcase() {
   return (
@@ -27,42 +27,15 @@ export default function StoriesShowcase() {
           </p>
         </header>
 
-        {/* Filter Pills (All Stories, One Piece, Naruto, etc.) */}
-        <div className="stories-filter-bar" role="toolbar" aria-label="Stories filters">
-          {[
-            'All Stories',
-            'One Piece',
-            'Naruto',
-            'Attack on Titan',
-            'Demon Slayer',
-            'Jujutsu Kaisen',
-            'Bleach',
-            'Filter',
-          ].map((label) => (
-            <button
-              key={label}
-              type="button"
-              className="stories-filter-pill"
-              aria-pressed={label === 'All Stories'}
-            >
-              {label === 'Filter' ? <Filter className="w-4 h-4" /> : label}
-            </button>
-          ))}
-        </div>
+        <CollectionBrowser
+          config={storiesCollectionConfig}
+          filterBarClassName="stories-filter-bar"
+          filterPillClassName="stories-filter-pill"
+          gridClassName="stories-showcase-grid"
+          actionClassName="stories-showcase-action"
+          actionLinkClassName="stories-showcase-all-link"
+        />
 
-        {/* Product Grid */}
-        <div className="stories-showcase-grid">
-          {storiesProducts.map((story, i) => (
-            <div
-              key={story.id}
-              className={`product-grid-item ${i === 8 ? 'product-grid-item--span-full' : ''}`}
-            >
-              <ProductCard product={story} />
-            </div>
-          ))}
-        </div>
-
-        {/* Explore All CTA */}
         <div className="stories-showcase-action">
           <Link href="/stories" className="stories-showcase-all-link">
             Explore All Stories

@@ -25,7 +25,7 @@ export default function Button({
   const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-[var(--transition-base)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-warm)] disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variantClasses = {
-    primary: 'bg-[var(--accent-warm)] text-white hover:bg-[var(--accent-copper)] shadow-lg hover:shadow-xl',
+    primary: 'bg-[var(--accent-warm)] text-[#0f0e0c] hover:bg-[var(--accent-copper)] shadow-lg hover:shadow-xl',
     secondary: 'bg-[var(--card-bg)] text-[var(--text-primary)] hover:bg-[var(--elevated-bg)] border border-[var(--border-card)]',
     outline: 'bg-transparent text-[var(--text-primary)] hover:bg-[var(--accent-warm)] hover:text-white border-2 border-[var(--accent-orange)] hover:border-[var(--accent-warm)]',
   };
