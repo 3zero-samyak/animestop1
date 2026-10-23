@@ -6,12 +6,16 @@ import { useAuth } from '@/lib/AuthProvider';
 import { getAuthErrorMessage } from '@/lib/authErrors';
 import { consumeAuthReturnTo, getSafeReturnTo, persistAuthToast } from '@/lib/authNavigation';
 
-export default function SignInForm() {
+interface SignInFormProps {
+  returnTo?: string | null;
+}
+
+export default function SignInForm({ returnTo: returnToProps }: SignInFormProps = {}) {
+  const { signIn, signInWithGoogle } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { signIn, signInWithGoogle } = useAuth();
-  const returnTo = searchParams.get('returnTo');
-  
+  const returnTo = returnToProps ?? searchParams.get('returnTo');
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +29,7 @@ export default function SignInForm() {
   const validate = () => {
     if (!email || !/.+@.+\..+/.test(email)) return 'Please enter a valid email';
     if (!password || password.length < 1) return 'Please enter your password';
-    if (!acceptedTerms) return 'Please accept the terms';
+    if (!acceptedTerms) return 'Please accept the terms and conditions to continue';
     return null;
   };
 
@@ -62,7 +66,7 @@ export default function SignInForm() {
     }
 
     if (!acceptedTerms) {
-      setError('Please accept the terms before continuing with Google.');
+      setError('Please accept the terms and conditions before continuing with Google.');
       return;
     }
 
@@ -139,7 +143,7 @@ export default function SignInForm() {
             Forgot your password?
           </a>
           <button type="button" className="auth-link" onClick={() => router.push('/')} disabled={loading}>
-            Back to store
+            Back to AnimeStop
           </button>
         </div>
 
@@ -148,10 +152,15 @@ export default function SignInForm() {
             <input 
               type="checkbox" 
               checked={acceptedTerms} 
-              onChange={(e) => setAcceptedTerms(e.target.checked)}
-              disabled={loading}
+              onChange={(e) => {
+                setAcceptedTerms(e.target.checked);
+                if (e.target.checked && error?.includes('terms')) {
+                  setError(null);
+                }
+              }}
+              disabled={loading || googleLoading}
             /> 
-            I agree with <a href="/terms">Terms and Conditions</a>
+            I agree with <a href="/terms" target="_blank" rel="noopener noreferrer">Terms and Conditions</a>
           </label>
         </div>
 
@@ -161,7 +170,7 @@ export default function SignInForm() {
           <button 
             type="submit" 
             className="account-access-button" 
-            disabled={!acceptedTerms || loading || googleLoading}
+            disabled={loading || googleLoading}
           >
             {loading ? 'SIGNING IN...' : 'Sign In'}
           </button>
@@ -188,7 +197,7 @@ export default function SignInForm() {
           type="button"
           className="account-access-button account-access-button-google"
           onClick={handleGoogleSignIn}
-          disabled={!acceptedTerms || loading || googleLoading}
+          disabled={loading || googleLoading}
           aria-label="Continue with Google"
         >
           <span className="auth-google-icon" aria-hidden="true">G</span>

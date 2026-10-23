@@ -15,9 +15,9 @@ const vault = enrichCollectionProducts(vaultProducts, 'vault');
 export const storiesCollectionConfig: CollectionConfig = {
   key: 'stories',
   title: 'Stories',
-  emptyHeading: 'NO MATCHING STORIES',
+  emptyHeading: 'No matching stories',
   emptyDescription: 'Try a different series filter or clear the search to see more Story concepts.',
-  exploreMoreLabel: 'EXPLORE MORE STORIES',
+  exploreMoreLabel: 'Explore more stories',
   products: stories,
   filters: [
     { id: 'all', label: 'All Stories' },
@@ -32,9 +32,9 @@ export const storiesCollectionConfig: CollectionConfig = {
 export const essentialsCollectionConfig: CollectionConfig = {
   key: 'essentials',
   title: 'Essentials',
-  emptyHeading: 'NO MATCHING ESSENTIALS',
+  emptyHeading: 'No matching essentials',
   emptyDescription: 'Try a different Essentials filter or clear the search to restore the collection.',
-  exploreMoreLabel: 'EXPLORE MORE ESSENTIALS',
+  exploreMoreLabel: 'Explore more essentials',
   products: essentials,
   filters: [
     { id: 'all', label: 'All Essentials' },
@@ -49,9 +49,9 @@ export const essentialsCollectionConfig: CollectionConfig = {
 export const possibilitiesCollectionConfig: CollectionConfig = {
   key: 'possibilities',
   title: 'Possibilities',
-  emptyHeading: 'NO MATCHING POSSIBILITIES',
+  emptyHeading: 'No matching possibilities',
   emptyDescription: 'Try a different idea category or clear the search to explore more alternate realities.',
-  exploreMoreLabel: 'EXPLORE MORE POSSIBILITIES',
+  exploreMoreLabel: 'Explore more possibilities',
   products: possibilities,
   filters: [
     { id: 'all', label: 'All Possibilities' },
@@ -66,9 +66,9 @@ export const possibilitiesCollectionConfig: CollectionConfig = {
 export const vaultCollectionConfig: CollectionConfig = {
   key: 'vault',
   title: 'Vault',
-  emptyHeading: 'NO MATCHING VAULT CONCEPTS',
+  emptyHeading: 'No matching vault concepts',
   emptyDescription: 'Try another Vault filter or clear the search to see more premium archive builds.',
-  exploreMoreLabel: 'EXPLORE MORE VAULT',
+  exploreMoreLabel: 'Explore more vault',
   products: vault,
   filters: [
     { id: 'all', label: 'All Vault' },

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ArrowRight, Search, X } from 'lucide-react';
 import ProductCard from '@/components/products/ProductCard';
 import {
@@ -20,7 +21,7 @@ interface CollectionBrowserProps {
   actionLinkClassName?: string;
 }
 
-export default function CollectionBrowser({
+function CollectionBrowserContent({
   config,
   className,
   filterBarClassName,
@@ -29,9 +30,20 @@ export default function CollectionBrowser({
   actionClassName,
   actionLinkClassName,
 }: CollectionBrowserProps) {
+  const searchParams = useSearchParams();
+  const urlQuery = searchParams.get('q') ?? '';
+
   const [filterId, setFilterId] = React.useState(config.filters[0]?.id ?? 'all');
-  const [query, setQuery] = React.useState('');
+  const [query, setQuery] = React.useState(urlQuery);
+  const [prevUrlQuery, setPrevUrlQuery] = React.useState(urlQuery);
   const [visibleCount, setVisibleCount] = React.useState(INITIAL_VISIBLE_COUNT);
+
+  // Sync state during render when URL search parameter changes
+  if (urlQuery !== prevUrlQuery) {
+    setPrevUrlQuery(urlQuery);
+    setQuery(urlQuery);
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+  }
 
   const matchingProducts = React.useMemo(
     () => applyCollectionFilters(config.products, filterId, query, config.filters),
@@ -153,5 +165,58 @@ export default function CollectionBrowser({
           : `${matchingProducts.length} matching products in ${config.title}.`}
       </div>
     </section>
+  );
+}
+
+function CollectionBrowserFallback({
+  config,
+  className,
+  filterBarClassName,
+  filterPillClassName,
+  gridClassName,
+}: CollectionBrowserProps) {
+  const initialProducts = config.products.slice(0, INITIAL_VISIBLE_COUNT);
+
+  return (
+    <section className={className}>
+      <div className="collection-browser-toolbar">
+        <div className={filterBarClassName} role="toolbar" aria-label={`${config.title} filters`}>
+          {config.filters.map((filter) => (
+            <span
+              key={filter.id}
+              className={filterPillClassName}
+              aria-hidden="true"
+            >
+              {filter.label}
+            </span>
+          ))}
+        </div>
+        <div className="collection-browser-search">
+          <Search className="collection-browser-search-icon" size={18} aria-hidden="true" />
+          <input
+            type="search"
+            disabled
+            placeholder={`Search ${config.title}`}
+            className="collection-browser-search-input opacity-75"
+            aria-label={`Search ${config.title}`}
+          />
+        </div>
+      </div>
+      <div className={gridClassName}>
+        {initialProducts.map((product) => (
+          <div key={product.id} className="product-grid-item">
+            <ProductCard product={product} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default function CollectionBrowser(props: CollectionBrowserProps) {
+  return (
+    <React.Suspense fallback={<CollectionBrowserFallback {...props} />}>
+      <CollectionBrowserContent {...props} />
+    </React.Suspense>
   );
 }

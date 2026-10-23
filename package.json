@@ -10,7 +10,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:rules": "jest tests/firestore.rules.test.ts tests/firestore.emailVerified.test.ts"
+    "test:rules": "jest tests/firestore.rules.test.ts tests/firestore.emailVerified.test.ts",
+    "test:emulator": "firebase emulators:exec --only firestore \"npm run test:rules\""
   },
   "dependencies": {
     "firebase": "^12.17.1",

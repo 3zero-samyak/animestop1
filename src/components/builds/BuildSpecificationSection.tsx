@@ -11,7 +11,7 @@ export default function BuildSpecificationSection({ build }: { build: BuildDetai
   return (
     <section className="build-specification-section">
       <div className="build-specification-container">
-        <h2 className="build-section-heading">THE BUILD</h2>
+        <h2 className="build-section-heading">The build</h2>
 
         {specs.length > 0 && (
           <div className="build-specification-grid">

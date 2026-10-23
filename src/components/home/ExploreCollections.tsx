@@ -9,7 +9,7 @@ import { ArrowRight } from 'lucide-react';
 const collections = [
   {
     id: 'essentials',
-    title: 'ESSENTIALS',
+    title: 'Essentials',
     description: 'Designed for everyday life. Carry the anime you love, wherever you go.',
     image: '/images/hero/essential-image.png',
     href: '/essentials',
@@ -17,7 +17,7 @@ const collections = [
   },
   {
     id: 'stories',
-    title: 'STORIES',
+    title: 'Stories',
     description: 'Relive the scenes that moved you. Moments that stay forever.',
     image: '/images/hero/stories-homepage.png',
     href: '/stories',
@@ -25,7 +25,7 @@ const collections = [
   },
   {
     id: 'possibilities',
-    title: 'POSSIBILITIES',
+    title: 'Possibilities',
     description: 'What if things were different? Explore alternate realities.',
     image: '/images/hero/possibilities-image.png',
     href: '/possibilities',
@@ -33,7 +33,7 @@ const collections = [
   },
   {
     id: 'vault',
-    title: 'VAULT',
+    title: 'Vault',
     description: 'Rare. Exclusive. Legendary. Artifacts for the truest collectors.',
     image: '/images/hero/vault-image.png',
     href: '/vault',
@@ -43,9 +43,9 @@ const collections = [
 
 export default function ExploreCollections() {
   return (
-    <section className="explore-collections-section">
+    <section id="collections" className="explore-collections-section" aria-labelledby="collections-title">
       <Container size="large" className="explore-collections-container">
-        <h2 className="explore-collections-heading">EXPLORE COLLECTIONS</h2>
+        <header className="section-heading-row"><div><p className="section-kicker">Find your corner of the universe</p><h2 id="collections-title" className="explore-collections-heading">A world for <span className="script-accent">every kind of fan.</span></h2></div><p className="section-heading-note">Everyday favourites, unforgettable scenes,<br />and ideas a little out of this world.</p></header>
         
         <div className="collection-grid">
           {collections.map((collection) => (
@@ -53,6 +53,7 @@ export default function ExploreCollections() {
               key={collection.id}
               href={collection.href}
               className="collection-card"
+              data-collection={collection.id}
               data-mode-image-container
             >
               {/* Media Layer */}
@@ -61,7 +62,7 @@ export default function ExploreCollections() {
                   src={collection.image}
                   alt={collection.title}
                   fill
-                  sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 25vw"
+                  sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 25vw"
                   style={{ objectFit: 'cover' }}
                   data-mode-sensitive="true"
                 />

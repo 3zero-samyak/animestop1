@@ -9,38 +9,38 @@ export default function HowItWorksPage() {
       <Header />
       <main>
         <article className="interior-page">
-          <h1 className="interior-page-title">How It Works</h1>
+          <h1 className="interior-page-title">How it works</h1>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">1. DISCOVER A STORY</h2>
+            <h2 className="interior-page-section-title">1. Discover a story</h2>
             <p>
               Browse the Stories collection to explore fan memories, lessons, and moments that have been shared with AnimeStop. Each story captures why a particular scene or idea stayed with someone.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">2. SHARE A MOMENT</h2>
+            <h2 className="interior-page-section-title">2. Share a moment</h2>
             <p>
               Submit your own story about a scene, emotion, theory, or lesson that resonated with you. Tell us what made it meaningful and why it continues to matter.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">3. WE DISCUSS IT</h2>
+            <h2 className="interior-page-section-title">3. We discuss it</h2>
             <p>
               The AnimeStop studio reviews submissions with care, looking for themes, symbolism, and emotional depth. We seek to understand not just what happened, but why it matters.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">4. A CONCEPT MAY BEGIN</h2>
+            <h2 className="interior-page-section-title">4. A concept may begin</h2>
             <p>
               Selected stories may inspire original visual concepts, editorial features, or future collection builds. Not every submission will be produced, but each one contributes to our understanding of what resonates with the community.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">5. FOLLOW THE JOURNEY</h2>
+            <h2 className="interior-page-section-title">5. Follow the journey</h2>
             <p>
               Track developments through the Journal and Stories sections. As concepts evolve, we share the process, the thinking, and the creative decisions that shape each piece.
             </p>

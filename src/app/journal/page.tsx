@@ -7,7 +7,6 @@ import JournalHero from '@/components/journal/JournalHero';
 import JournalFilters from '@/components/journal/JournalFilters';
 import JournalCard from '@/components/journal/JournalCard';
 import JournalValuesStrip from '@/components/journal/JournalValuesStrip';
-import GlobalJourney from '@/components/layout/GlobalJourney';
 import { JOURNAL_ARTICLES, JournalArticle } from '@/data/journalArticles';
 
 export default function JournalPage() {
@@ -45,13 +44,11 @@ export default function JournalPage() {
 
         {visibleCount < articles.length && (
           <div className="journal-load-more">
-            <button className="btn outline" onClick={loadMore}>LOAD MORE JOURNALS ↓</button>
+            <button className="btn outline" onClick={loadMore}>Load more journals ↓</button>
           </div>
         )}
 
         <JournalValuesStrip />
-
-        <GlobalJourney />
       </main>
       <Footer />
     </>

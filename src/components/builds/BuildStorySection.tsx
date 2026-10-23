@@ -6,7 +6,7 @@ import type { BuildDetail } from '@/data/builds';
 export default function BuildStorySection({ build }: { build: BuildDetail }) {
   return (
     <section className="build-story-section">
-      <h2>THE STORY BEHIND THIS BUILD</h2>
+      <h2>The story behind this build</h2>
       <div className="build-story-grid">
         <div className="build-story-copy">
           {(build.storyParagraphs || [build.fullDescription]).map((p, i) => (

@@ -9,11 +9,12 @@ export default function JournalHero() {
     <section className="journal-hero" role="region" aria-label="Journal hero">
       <div className="journal-hero-inner">
         <ScrollReveal>
-          <h1 className="journal-hero-title">JOURNAL</h1>
+          <p className="section-kicker">Notes from our little universe</p>
+          <h1 className="journal-hero-title">The journal</h1>
         </ScrollReveal>
 
         <ScrollReveal delay={80}>
-          <h2 className="journal-hero-sub">Thoughts. Stories. Reflections.<br/>From the AnimeStop Universe.</h2>
+          <h2 className="journal-hero-sub">A few thoughts.<br/>A thousand little inspirations.</h2>
         </ScrollReveal>
 
         <ScrollReveal delay={160}>
@@ -23,13 +24,13 @@ export default function JournalHero() {
         <ScrollReveal delay={240}>
           <div className="journal-hero-cta">
             <Link href="/journal/write" className="journal-write-button" aria-label="Write your journal">
-              WRITE YOUR JOURNAL →
+              Write your journal →
             </Link>
           </div>
         </ScrollReveal>
       </div>
 
-      <div className="journal-hero-visual" aria-hidden />
+      <div className="journal-hero-visual" aria-hidden="true"><span className="journal-visual-label">Stories from the other side of the screen.</span></div>
     </section>
   );
 }

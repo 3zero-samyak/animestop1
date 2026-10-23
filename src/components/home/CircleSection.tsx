@@ -1,5 +1,6 @@
 import React from 'react';
-import { MessageCircle, Lightbulb, Users, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { MessageCircle, Lightbulb, Users, Sparkles, ArrowRight } from 'lucide-react';
 
 const features = [
   { icon: MessageCircle, text: 'Talk about your favorite moments' },
@@ -10,9 +11,18 @@ const features = [
 
 export default function CircleSection() {
   return (
-    <article className="community-panel group cursor-pointer" data-mode-image-container>
-      {/* Media layer */}
-      <div className="community-panel-media" style={{ backgroundColor: 'var(--surface-secondary)' }} />
+    <Link href="/circle" className="community-panel group cursor-pointer block" data-mode-image-container>
+      {/* Media layer using existing asset */}
+      <div 
+        className="community-panel-media mode-sensitive-background" 
+        data-mode-sensitive-background="true"
+        style={{ 
+          backgroundColor: 'var(--surface-secondary)',
+          backgroundImage: 'url(/images/hero/the%20circle-image.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }} 
+      />
 
       {/* Gradient Overlay */}
       <div className="community-panel-overlay media-overlay-card" aria-hidden="true" />
@@ -25,8 +35,7 @@ export default function CircleSection() {
             fontFamily: 'var(--font-stylish)',
             fontStyle: 'italic',
           }}
-        >
-          THE CIRCLE
+        >The circle
         </h2>
         
         <p 
@@ -63,7 +72,20 @@ export default function CircleSection() {
             );
           })}
         </div>
+        
+        {/* CTA Button */}
+        <div className="pt-2">
+          <span 
+            className="inline-flex items-center gap-2 text-sm lg:text-base font-semibold group-hover:gap-3 transition-all media-cta"
+            style={{ 
+              color: 'var(--accent-orange)',
+            }}
+          >
+            Join the circle
+            <ArrowRight className="w-5 h-5" />
+          </span>
+        </div>
       </div>
-    </article>
+    </Link>
   );
 }

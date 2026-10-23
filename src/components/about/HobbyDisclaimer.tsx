@@ -8,8 +8,7 @@ export default function HobbyDisclaimer() {
     <section className="about-section">
       <ScrollReveal>
         <div className="hobby-disclaimer">
-          <h2 className="hobby-disclaimer-title">
-            Fan-Inspired. Unofficial. Made with Love.
+          <h2 className="hobby-disclaimer-title">Fan-inspired. Unofficial. Made with love.
           </h2>
 
           <div className="hobby-disclaimer-content">

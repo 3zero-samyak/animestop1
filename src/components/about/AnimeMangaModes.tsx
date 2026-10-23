@@ -14,7 +14,7 @@ export default function AnimeMangaModes() {
       <div className="mode-split-grid">
         <ScrollReveal delay={100} direction="left" distance={35}>
           <div className="mode-panel mode-panel-anime">
-            <h3 className="mode-panel-title">Anime Mode</h3>
+            <h3 className="mode-panel-title">Anime mode</h3>
             <p className="mode-panel-subtitle">Colorful & Cinematic</p>
 
             <p className="mode-panel-description">
@@ -37,7 +37,7 @@ export default function AnimeMangaModes() {
 
         <ScrollReveal delay={100} direction="right" distance={35}>
           <div className="mode-panel mode-panel-manga">
-            <h3 className="mode-panel-title">Manga Mode</h3>
+            <h3 className="mode-panel-title">Manga mode</h3>
             <p className="mode-panel-subtitle">Process & Panels</p>
 
             <p className="mode-panel-description">

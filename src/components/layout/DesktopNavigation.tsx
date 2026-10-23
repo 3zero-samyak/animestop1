@@ -31,7 +31,7 @@ export default function DesktopNavigation() {
             className="nav-link relative group"
             aria-current={active ? 'page' : undefined}
           >
-            <span className="relative z-10 inline-block text-[12.5px] font-medium tracking-[0.08em] uppercase transition-colors duration-[var(--transition-nav)]">
+            <span className="relative z-10 inline-block text-[12.5px] font-medium tracking-[0.01em] transition-colors duration-[var(--transition-nav)]">
               {item.label}
             </span>
           </Link>

@@ -15,8 +15,7 @@ export default function ContinueJourney() {
                 <h3 
                   className="text-2xl md:text-3xl font-stylish mb-2"
                   style={{ color: 'var(--text-primary)' }}
-                >
-                  Your Journey
+                >Your journey
                 </h3>
                 <p 
                   className="text-base"

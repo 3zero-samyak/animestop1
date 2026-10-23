@@ -24,8 +24,6 @@ export default function Header() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  // single persistent header - no scroll-based swapping
-
   // Close search when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -44,7 +42,6 @@ export default function Header() {
       if (e.key === 'Escape') {
         if (searchOpen) {
           setSearchOpen(false);
-          // Return focus to search button
           const searchButton = searchRef.current?.querySelector('button');
           searchButton?.focus();
         }
@@ -65,7 +62,6 @@ export default function Header() {
   // Return focus to menu button when menu closes
   useEffect(() => {
     if (!menuOpen && menuButtonRef.current) {
-      // Small delay to ensure drawer animation completes
       setTimeout(() => {
         menuButtonRef.current?.focus();
       }, 50);
@@ -164,8 +160,8 @@ export default function Header() {
               )}
             </div>
 
-            {/* Profile (desktop only) */}
-            <div className="hidden lg:flex items-center" style={{ marginLeft: 8 }}>
+            {/* Profile (desktop & tablet) */}
+            <div className="hidden md:flex items-center" style={{ marginLeft: 8 }}>
               <ProfileMenu />
             </div>
 
@@ -180,4 +176,3 @@ export default function Header() {
     </>
   );
 }
-

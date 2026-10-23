@@ -10,7 +10,7 @@ export default function ContactPage() {
       <Header />
       <main>
         <article className="interior-page">
-          <h1 className="interior-page-title">DM AnimeStop</h1>
+          <h1 className="interior-page-title">Contact AnimeStop</h1>
           
           <p className="interior-page-intro">
             Have a question, concern, or idea? Reach out to the AnimeStop team.

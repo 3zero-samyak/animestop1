@@ -38,8 +38,7 @@ export default function YourJourneyCard() {
       <h2 
         className="text-xl lg:text-2xl font-bold mb-2"
         style={{ color: 'var(--text-primary)' }}
-      >
-        Your Journey
+      >Your journey
       </h2>
 
       {/* 'Continue exploring' removed per request */}

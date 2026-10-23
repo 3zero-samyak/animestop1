@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { Inter, Dancing_Script } from "next/font/google";
+import { Inter, Dancing_Script, Bangers, Permanent_Marker } from "next/font/google";
 import "./globals.css";
+import "./visual-system.css";
 import AuthToastHost from "@/components/auth/AuthToastHost";
 import { JourneyProvider } from "@/components/journey/JourneyProvider";
 import { SavedItemsProvider } from "@/components/saved/SavedItemsProvider";
 import GlobalJourney from "@/components/layout/GlobalJourney";
-import { DISPLAY_MODE_COOKIE_KEY, ModeProvider } from "@/components/mode/ModeProvider";
+import { ModeProvider } from "@/components/mode/ModeProvider";
 import { AuthProvider } from "@/lib/AuthProvider";
-import type { DisplayMode } from "@/types/displayMode";
+import { type DisplayMode, DISPLAY_MODE_COOKIE_KEY } from "@/types/displayMode";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,6 +22,20 @@ const dancingScript = Dancing_Script({
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
+});
+
+const bangers = Bangers({
+  variable: "--font-bangers",
+  subsets: ["latin"],
+  display: "swap",
+  weight: "400",
+});
+
+const permanentMarker = Permanent_Marker({
+  variable: "--font-permanent-marker",
+  subsets: ["latin"],
+  display: "swap",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -39,15 +54,17 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const initialMode = normalizeModeCookie(cookieStore.get(DISPLAY_MODE_COOKIE_KEY)?.value);
+  const rawCookie = cookieStore.get(DISPLAY_MODE_COOKIE_KEY)?.value;
+  const initialMode = normalizeModeCookie(rawCookie);
 
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${dancingScript.variable}`}
+      className={`${inter.variable} ${dancingScript.variable} ${bangers.variable} ${permanentMarker.variable}`}
       data-display-mode={initialMode}
+      data-mode={initialMode}
     >
-      <body>
+      <body data-display-mode={initialMode} data-mode={initialMode}>
         <AuthProvider>
           <ModeProvider initialMode={initialMode}>
             <SavedItemsProvider>

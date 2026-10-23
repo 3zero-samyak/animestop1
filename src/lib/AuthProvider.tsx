@@ -34,6 +34,7 @@ export type AuthContextType = {
   loading: boolean;
   isAuthenticated: boolean;
   isEmailVerified: boolean;
+  profileSyncError: string | null;
   signIn: (email: string, password: string) => Promise<UserCredential>;
   signUp: (email: string, password: string, displayName?: string) => Promise<SignUpResult>;
   signInWithGoogle: () => Promise<UserCredential | null>;
@@ -41,19 +42,24 @@ export type AuthContextType = {
   resetPassword: (email: string) => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  retryProfileSync: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [, setAuthRevision] = useState(0);
+  const [profileSyncError, setProfileSyncError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const signupInProgressRef = React.useRef(false);
   const googleAuthInProgressRef = React.useRef(false);
   const previousEmailVerifiedRef = React.useRef(false);
 
+  // Preserve the actual User instance with SDK methods intact, triggering a re-render via revision counter
   const setFreshUser = React.useCallback(() => {
-    setUser(auth.currentUser ? { ...auth.currentUser } : null);
+    setUser(auth.currentUser);
+    setAuthRevision((prev) => prev + 1);
   }, []);
 
   const getGoogleProvider = () => {
@@ -64,14 +70,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const syncSignedInUser = React.useCallback(async (signedInUser: User) => {
     await signedInUser.getIdToken(true);
+    setProfileSyncError(null);
 
     try {
       await ensureUserProfile(signedInUser);
     } catch (error) {
-      if (process.env.NODE_ENV === 'development' && error && typeof error === 'object') {
-        const firestoreError = error as { code?: string; message?: string };
-        console.error(`[UserProfile] code: ${firestoreError.code ?? 'unknown'}`);
-        console.error(`[UserProfile] message: ${firestoreError.message ?? 'Unknown Firestore error'}`);
+      const firestoreError = error as { code?: string; message?: string };
+      setProfileSyncError(
+        firestoreError?.message || 'Failed to synchronize user profile. Please try again.'
+      );
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`[UserProfile] code: ${firestoreError?.code ?? 'unknown'}`);
+        console.error(`[UserProfile] message: ${firestoreError?.message ?? 'Unknown Firestore error'}`);
       }
     }
 
@@ -146,8 +156,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
+      setAuthRevision((prev) => prev + 1);
 
-       if (firebaseUser && firebaseUser.emailVerified && !previousEmailVerifiedRef.current) {
+      if (firebaseUser && firebaseUser.emailVerified && !previousEmailVerifiedRef.current) {
         const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
         if (params?.get('verification') === 'complete') {
           persistAuthToast({ kind: 'verified', message: 'Email verified successfully!' });
@@ -164,11 +175,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           await firebaseUser.getIdToken(true);
           await ensureUserProfile(firebaseUser);
+          setProfileSyncError(null);
         } catch (error) {
-          if (process.env.NODE_ENV === 'development' && error && typeof error === 'object') {
-            const firestoreError = error as { code?: string; message?: string };
-            console.error(`[UserProfile] code: ${firestoreError.code ?? 'unknown'}`);
-            console.error(`[UserProfile] message: ${firestoreError.message ?? 'Unknown Firestore error'}`);
+          const firestoreError = error as { code?: string; message?: string };
+          setProfileSyncError(
+            firestoreError?.message || 'Failed to synchronize user profile. Please try again.'
+          );
+          if (process.env.NODE_ENV === 'development') {
+            console.error(`[UserProfile] code: ${firestoreError?.code ?? 'unknown'}`);
+            console.error(`[UserProfile] message: ${firestoreError?.message ?? 'Unknown Firestore error'}`);
           }
         }
       }
@@ -225,11 +240,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         await ensureUserProfile(currentUser);
+        setProfileSyncError(null);
       } catch (error) {
-        if (process.env.NODE_ENV === 'development' && error && typeof error === 'object') {
-          const firestoreError = error as { code?: string; message?: string };
-          console.error(`[UserProfile] code: ${firestoreError.code ?? 'unknown'}`);
-          console.error(`[UserProfile] message: ${firestoreError.message ?? 'Unknown Firestore error'}`);
+        const firestoreError = error as { code?: string; message?: string };
+        setProfileSyncError(
+          firestoreError?.message || 'Failed to synchronize user profile.'
+        );
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`[UserProfile] code: ${firestoreError?.code ?? 'unknown'}`);
+          console.error(`[UserProfile] message: ${firestoreError?.message ?? 'Unknown Firestore error'}`);
         }
       }
 
@@ -274,6 +293,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async (): Promise<void> => {
+    setProfileSyncError(null);
     await firebaseSignOut(auth);
   };
 
@@ -297,15 +317,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await currentUser.getIdToken(true);
       try {
         await syncUserProfile(currentUser);
+        setProfileSyncError(null);
       } catch (error) {
-        if (process.env.NODE_ENV === 'development' && error && typeof error === 'object') {
-          const firestoreError = error as { code?: string; message?: string };
-          console.error(`[UserProfile] code: ${firestoreError.code ?? 'unknown'}`);
-          console.error(`[UserProfile] message: ${firestoreError.message ?? 'Unknown Firestore error'}`);
+        const firestoreError = error as { code?: string; message?: string };
+        setProfileSyncError(
+          firestoreError?.message || 'Failed to synchronize user profile.'
+        );
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`[UserProfile] code: ${firestoreError?.code ?? 'unknown'}`);
+          console.error(`[UserProfile] message: ${firestoreError?.message ?? 'Unknown Firestore error'}`);
         }
       }
     }
 
+    setFreshUser();
+  };
+
+  const retryProfileSync = async (): Promise<void> => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
+    setProfileSyncError(null);
+    try {
+      await currentUser.getIdToken(true);
+      await ensureUserProfile(currentUser);
+    } catch (error) {
+      const firestoreError = error as { code?: string; message?: string };
+      setProfileSyncError(
+        firestoreError?.message || 'Failed to synchronize profile. Please try again.'
+      );
+      throw error;
+    }
     setFreshUser();
   };
 
@@ -314,6 +355,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     isAuthenticated: !!user,
     isEmailVerified: user?.emailVerified ?? false,
+    profileSyncError,
     signIn,
     signUp,
     signInWithGoogle,
@@ -321,6 +363,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     resetPassword,
     sendVerificationEmail,
     refreshUser,
+    retryProfileSync,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -12,8 +12,17 @@ const steps = [
 export default function StorySubmission() {
   return (
     <Link href="/share-story" className="community-panel group cursor-pointer" data-mode-image-container>
-      {/* Media layer */}
-      <div className="community-panel-media" style={{ backgroundColor: 'var(--surface-secondary)' }} />
+      {/* Media layer using existing artwork */}
+      <div 
+        className="community-panel-media mode-sensitive-background" 
+        data-mode-sensitive-background="true"
+        style={{ 
+          backgroundColor: 'var(--surface-secondary)',
+          backgroundImage: 'url(/images/hero/have%20a%20story-image.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }} 
+      />
 
       {/* Gradient Overlay */}
       <div className="community-panel-overlay media-overlay-card" aria-hidden="true" />
@@ -26,8 +35,7 @@ export default function StorySubmission() {
             fontFamily: 'var(--font-stylish)',
             fontStyle: 'italic',
           }}
-        >
-          HAVE A STORY?
+        >Have a story?
         </h2>
         
         <p 
@@ -41,11 +49,10 @@ export default function StorySubmission() {
           {steps.map((step, index) => (
             <div key={index} className="flex items-start gap-3">
               <CheckCircle 
-                className="flex-shrink-0 w-5 h-5 mt-0.5" 
+                className="w-5 h-5 flex-shrink-0 mt-0.5" 
                 style={{ 
-                  color: 'var(--image-text-secondary)',
-                  textShadow: 'var(--image-text-shadow)',
-                }}
+                  color: 'var(--accent-orange)',
+                }} 
               />
               <span 
                 className="text-sm lg:text-base media-description"
@@ -56,18 +63,18 @@ export default function StorySubmission() {
           ))}
         </div>
         
-        {/* Button */}
-        <span
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-300 hover:gap-3 w-fit button"
-          style={{
-            border: '1px solid var(--accent-orange)',
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            backdropFilter: 'blur(4px)',
-          }}
-        >
-          <span className="text-sm font-medium">Share Your Story</span>
-          <ArrowRight className="w-4 h-4" />
-        </span>
+        {/* CTA Button */}
+        <div className="pt-2">
+          <span 
+            className="inline-flex items-center gap-2 text-sm lg:text-base font-semibold group-hover:gap-3 transition-all media-cta"
+            style={{ 
+              color: 'var(--accent-orange)',
+            }}
+          >
+            Tell us your story
+            <ArrowRight className="w-5 h-5" />
+          </span>
+        </div>
       </div>
     </Link>
   );

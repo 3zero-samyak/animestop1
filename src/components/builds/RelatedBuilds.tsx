@@ -13,8 +13,8 @@ export default function RelatedBuilds({ currentBuild }: { currentBuild: BuildDet
   }
 
   const heading = currentBuild.category === 'stories' 
-    ? 'MORE STORIES THAT STAY WITH YOU'
-    : 'MORE BUILDS THAT MAY STAY WITH YOU';
+    ? 'More stories that stay with you'
+    : 'More builds that may stay with you';
 
   return (
     <section className="related-builds-section">

@@ -1,59 +1,41 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-
-const articles = [
-  {
-    id: 1,
-    title: "Why We Build\n'Set Your Heart Ablaze'",
-    timeAgo: '2 days ago',
-    image: '/generated/journal-01.svg',
-  },
-  {
-    id: 2,
-    title: 'The Beauty of\nAlternate Realities',
-    timeAgo: '5 days ago',
-    image: '/generated/journal-02.svg',
-  },
-  {
-    id: 3,
-    title: 'Behind The Build:\nMemory Rewind',
-    timeAgo: '1 week ago',
-    image: '/generated/journal-03.svg',
-  },
-];
+import { ArrowRight } from 'lucide-react';
+import { JOURNAL_ARTICLES } from '@/data/journalArticles';
 
 export default function JournalSection() {
+  const featuredArticles = JOURNAL_ARTICLES.slice(0, 3);
+
   return (
     <article className="community-panel journal-panel">
       <div className="journal-panel-content">
         {/* Header */}
         <header className="journal-header">
-        <h2 
-          className="text-4xl lg:text-5xl font-bold"
-          style={{ 
-            color: 'var(--text-primary)',
-            fontFamily: 'var(--font-stylish)',
-            fontStyle: 'italic',
-          }}
-        >
-          JOURNAL
-        </h2>
-        
-        <p 
-          className="text-sm lg:text-base"
-          style={{ color: 'var(--text-muted)', marginTop: '12px' }}
-        >
-          Thoughts, stories & everything that inspires us.
-        </p>
+          <h2 
+            className="text-4xl lg:text-5xl font-bold"
+            style={{ 
+              color: 'var(--text-primary)',
+              fontFamily: 'var(--font-stylish)',
+              fontStyle: 'italic',
+            }}
+          >Journal
+          </h2>
+          
+          <p 
+            className="text-sm lg:text-base"
+            style={{ color: 'var(--text-muted)', marginTop: '12px' }}
+          >
+            Thoughts, stories & everything that inspires us.
+          </p>
         </header>
         
         {/* Articles List */}
         <div className="journal-article-list">
-          {articles.map((article) => (
-            <button
+          {featuredArticles.map((article, idx) => (
+            <Link
               key={article.id}
-              className="journal-article"
+              href={`/journal/${article.slug}`}
+              className="journal-article group transition-transform hover:translate-x-1"
             >
               {/* Thumbnail */}
               <div className="journal-thumbnail">
@@ -62,27 +44,27 @@ export default function JournalSection() {
                   data-mode-sensitive-background="true"
                   style={{
                     backgroundColor: 'var(--surface-secondary)',
-                    backgroundImage: article.image ? `url(${article.image})` : undefined,
+                    backgroundImage: `url(/generated/journal-0${(idx % 3) + 1}.svg)`,
                   }}
                 />
               </div>
               
               {/* Content */}
               <div className="journal-article-copy">
-                <h3 className="journal-article-title">
+                <h3 className="journal-article-title group-hover:text-[var(--accent-primary)] transition-colors">
                   {article.title}
                 </h3>
                 <p className="journal-article-time">
-                  {article.timeAgo}
+                  {article.readTime} · {article.views} views
                 </p>
               </div>
-            </button>
+            </Link>
           ))}
         </div>
         
         {/* Read All Button */}
         <Link href="/journal" className="journal-all-link">
-          <span className="text-sm font-medium">Read All Articles</span>
+          <span className="text-sm font-medium">Read all articles</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

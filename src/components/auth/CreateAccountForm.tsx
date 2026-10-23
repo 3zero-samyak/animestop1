@@ -6,11 +6,16 @@ import { useAuth } from '@/lib/AuthProvider';
 import { getAuthErrorMessage } from '@/lib/authErrors';
 import { consumeAuthReturnTo, getSafeReturnTo, persistAuthToast } from '@/lib/authNavigation';
 
-export default function CreateAccountForm() {
+interface CreateAccountFormProps {
+  returnTo?: string | null;
+}
+
+export default function CreateAccountForm({ returnTo: returnToProps }: CreateAccountFormProps = {}) {
+  const { signUp, signInWithGoogle } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { signUp, signInWithGoogle, sendVerificationEmail } = useAuth();
-  
+  const returnTo = returnToProps ?? searchParams.get('returnTo');
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,21 +24,21 @@ export default function CreateAccountForm() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [createdEmail, setCreatedEmail] = useState('');
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [createdEmail, setCreatedEmail] = useState<string | null>(null);
   const [verificationSent, setVerificationSent] = useState(false);
   const [verificationError, setVerificationError] = useState<string | null>(null);
-  const [resendCooldown, setResendCooldown] = useState(0);
   const [resending, setResending] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
-  const getDestination = () => getSafeReturnTo(searchParams.get('returnTo'), consumeAuthReturnTo('/account'));
+  const getDestination = () => getSafeReturnTo(returnTo, consumeAuthReturnTo('/account'));
 
   const validate = () => {
-    if (!name) return 'Name is required';
-    if (!/.+@.+\..+/.test(email)) return 'Valid email required';
-    if (password.length < 8) return 'Password must be at least 8 characters';
+    if (!name.trim()) return 'Name is required';
+    if (!email || !/.+@.+\..+/.test(email)) return 'Please enter a valid email';
+    if (!password || password.length < 6) return 'Password must be at least 6 characters';
     if (password !== confirm) return 'Passwords do not match';
-    if (!acceptedTerms) return 'Please accept the terms';
+    if (!acceptedTerms) return 'Please accept the terms and conditions to continue';
     return null;
   };
 
@@ -68,25 +73,38 @@ export default function CreateAccountForm() {
 
   React.useEffect(() => {
     if (resendCooldown <= 0) return;
-    const timer = window.setTimeout(() => setResendCooldown((value) => value - 1), 1000);
-    return () => window.clearTimeout(timer);
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
   }, [resendCooldown]);
 
   const handleContinue = () => {
+    persistAuthToast({
+      kind: 'success',
+      message: 'Account created. Please check your inbox to verify your email.',
+    });
     router.replace(getDestination());
   };
 
   const handleResend = async () => {
-    if (resendCooldown > 0) return;
-
+    if (!email || resendCooldown > 0) return;
     setResending(true);
-    setError(null);
     setVerificationError(null);
-
     try {
-      await sendVerificationEmail();
-      setVerificationSent(true);
-      setResendCooldown(60);
+      const result = await signUp(email, password, name);
+      setVerificationSent(result.verificationSent);
+      if (result.verificationSent) {
+        setResendCooldown(60);
+      } else if (result.verificationErrorCode) {
+        setVerificationError(getAuthErrorMessage({ code: result.verificationErrorCode }, 'verification'));
+      }
     } catch (err) {
       setVerificationSent(false);
       setVerificationError(getAuthErrorMessage(err, 'verification'));
@@ -101,7 +119,7 @@ export default function CreateAccountForm() {
     }
 
     if (!acceptedTerms) {
-      setError('Please accept the terms before continuing with Google.');
+      setError('Please accept the terms and conditions before continuing with Google.');
       return;
     }
 
@@ -177,7 +195,7 @@ export default function CreateAccountForm() {
           </button>
           <button 
             type="button" 
-            className="account-access-button"
+            className="account-access-button" 
             onClick={handleContinue}
           >
             CONTINUE TO ACCOUNT
@@ -200,7 +218,7 @@ export default function CreateAccountForm() {
           autoComplete="name"
           className="auth-input" 
           value={name} 
-          onChange={(e) => setName(e.target.value)} 
+          onChange={(e) => { setName(e.target.value); setError(null); }} 
           disabled={loading}
           required 
         />
@@ -210,10 +228,10 @@ export default function CreateAccountForm() {
           id="email" 
           name="email" 
           type="email" 
-          autoComplete="email"
+          autoComplete="email" 
           className="auth-input" 
           value={email} 
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => { setEmail(e.target.value); setError(null); }} 
           disabled={loading}
           required 
         />
@@ -227,7 +245,7 @@ export default function CreateAccountForm() {
             autoComplete="new-password"
             className="auth-input" 
             value={password} 
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => { setPassword(e.target.value); setError(null); }} 
             disabled={loading}
             required 
           />
@@ -251,7 +269,7 @@ export default function CreateAccountForm() {
             autoComplete="new-password"
             className="auth-input" 
             value={confirm} 
-            onChange={(e) => setConfirm(e.target.value)}
+            onChange={(e) => { setConfirm(e.target.value); setError(null); }}
             disabled={loading}
             required 
           />
@@ -262,10 +280,15 @@ export default function CreateAccountForm() {
             <input 
               type="checkbox" 
               checked={acceptedTerms} 
-              onChange={(e) => setAcceptedTerms(e.target.checked)}
-              disabled={loading}
+              onChange={(e) => {
+                setAcceptedTerms(e.target.checked);
+                if (e.target.checked && error?.includes('terms')) {
+                  setError(null);
+                }
+              }}
+              disabled={loading || googleLoading}
             /> 
-            I agree with <a href="/terms">Terms and Conditions</a>
+            I agree with <a href="/terms" target="_blank" rel="noopener noreferrer">Terms and Conditions</a>
           </label>
         </div>
 
@@ -275,7 +298,7 @@ export default function CreateAccountForm() {
           <button 
             type="submit" 
             className="account-access-button" 
-            disabled={!acceptedTerms || loading || googleLoading}
+            disabled={loading || googleLoading}
           >
             {loading ? 'CREATING ACCOUNT...' : 'Create Account'}
           </button>
@@ -289,7 +312,7 @@ export default function CreateAccountForm() {
           type="button"
           className="account-access-button account-access-button-google"
           onClick={handleGoogleSignIn}
-          disabled={!acceptedTerms || loading || googleLoading}
+          disabled={loading || googleLoading}
           aria-label="Continue with Google"
         >
           <span className="auth-google-icon" aria-hidden="true">G</span>
@@ -302,15 +325,14 @@ export default function CreateAccountForm() {
           type="button" 
           className="auth-link" 
           onClick={() => {
-            const returnTo = searchParams.get('returnTo');
-            const url = returnTo 
-              ? `/login?view=signin&returnTo=${encodeURIComponent(returnTo)}`
+            const returnToParam = searchParams.get('returnTo');
+            const url = returnToParam 
+              ? `/login?view=signin&returnTo=${encodeURIComponent(returnToParam)}`
               : '/login?view=signin';
             router.push(url);
           }}
-          disabled={loading || googleLoading}
         >
-          Sign In
+          Sign in
         </button>
       </div>
     </div>

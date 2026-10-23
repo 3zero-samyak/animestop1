@@ -13,7 +13,7 @@ import { getUserProfile, type UserProfile } from '@/lib/userProfile';
 
 export default function AccountPage() {
   const router = useRouter();
-  const { user, logout, sendVerificationEmail, refreshUser } = useAuth();
+  const { user, logout, sendVerificationEmail, refreshUser, profileSyncError, retryProfileSync } = useAuth();
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
   const [sendingVerification, setSendingVerification] = React.useState(false);
   const [refreshingVerification, setRefreshingVerification] = React.useState(false);
@@ -141,6 +141,22 @@ export default function AccountPage() {
         <main className="auth-page">
           <div className="account-page-container">
             <h1 className="account-page-title">Account</h1>
+            {profileSyncError && (
+              <div
+                className="account-error flex items-center justify-between p-4 mb-6 rounded-lg border border-[var(--accent-red)]"
+                role="alert"
+                style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
+              >
+                <span>{profileSyncError}</span>
+                <button
+                  type="button"
+                  onClick={() => void retryProfileSync()}
+                  className="auth-link font-semibold underline ml-4"
+                >
+                  Retry Sync
+                </button>
+              </div>
+            )}
 
             {/* Profile Information */}
             <section className="account-section">

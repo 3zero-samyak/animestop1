@@ -11,7 +11,7 @@ export default function BuildInterestPanel({ build }: { build: BuildDetail }) {
   return (
     <section className="build-interest-panel">
       <div className="build-interest-intro">
-        <h2 className="build-interest-heading">INTERESTED IN THIS BUILD?</h2>
+        <h2 className="build-interest-heading">Interested in this build?</h2>
         <p className="build-interest-description">
           This isn&apos;t just another collectible.
           <br />

@@ -15,7 +15,10 @@ export default function JournalFilters({ sort, onSort }: { sort: string; onSort:
     };
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape') {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
     };
 
     document.addEventListener('click', onDoc);
@@ -30,6 +33,13 @@ export default function JournalFilters({ sort, onSort }: { sort: string; onSort:
     onSort(value);
     setOpen(false);
     triggerRef.current?.focus();
+  };
+
+  const handleOptionKeyDown = (e: React.KeyboardEvent, value: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      select(value);
+    }
   };
 
   return (
@@ -53,8 +63,26 @@ export default function JournalFilters({ sort, onSort }: { sort: string; onSort:
 
         {open && (
           <ul ref={menuRef} role="listbox" aria-labelledby="journal-sort-label" tabIndex={-1} className="journal-sort-menu">
-            <li role="option" aria-selected={sort === 'latest'} tabIndex={0} className="journal-sort-option" onClick={()=>select('latest')}>Latest</li>
-            <li role="option" aria-selected={sort === 'oldest'} tabIndex={0} className="journal-sort-option" onClick={()=>select('oldest')}>Oldest</li>
+            <li 
+              role="option" 
+              aria-selected={sort === 'latest'} 
+              tabIndex={0} 
+              className="journal-sort-option" 
+              onClick={()=>select('latest')}
+              onKeyDown={(e) => handleOptionKeyDown(e, 'latest')}
+            >
+              Latest
+            </li>
+            <li 
+              role="option" 
+              aria-selected={sort === 'oldest'} 
+              tabIndex={0} 
+              className="journal-sort-option" 
+              onClick={()=>select('oldest')}
+              onKeyDown={(e) => handleOptionKeyDown(e, 'oldest')}
+            >
+              Oldest
+            </li>
           </ul>
         )}
       </div>

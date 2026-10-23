@@ -8,7 +8,7 @@ import { ArrowRight, ShoppingBag, BookOpen, Sparkles, Diamond } from 'lucide-rea
 const categories = [
   {
     id: 'essentials',
-    title: 'ESSENTIALS',
+    title: 'Essentials',
     description: 'Designed for everyday life. Carry the anime you love, wherever you go.',
     image: '/images/hero/essential-image.png',
     icon: ShoppingBag,
@@ -17,7 +17,7 @@ const categories = [
   },
   {
     id: 'stories',
-    title: 'STORIES',
+    title: 'Stories',
     description: 'Relive the scenes that moved you. Moments that stay forever.',
     image: '/images/hero/stories-homepage.png',
     icon: BookOpen,
@@ -26,7 +26,7 @@ const categories = [
   },
   {
     id: 'possibilities',
-    title: 'POSSIBILITIES',
+    title: 'Possibilities',
     description: 'What if things were different? Explore alternate realities.',
     image: '/images/hero/possibilities-image.png',
     icon: Sparkles,
@@ -35,7 +35,7 @@ const categories = [
   },
   {
     id: 'vault',
-    title: 'VAULT',
+    title: 'Vault',
     description: 'Rare. Exclusive. Legendary. Artifacts for the truest collectors.',
     image: '/images/hero/vault-image.png',
     icon: Diamond,

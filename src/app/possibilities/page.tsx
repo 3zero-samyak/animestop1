@@ -80,16 +80,12 @@ export default function PossibilitiesPage() {
         </section>
 
         {/* Explore Alternate Realities Header */}
-        <section className="possibilities-explore-header">
+        <section id="possibilities-grid" className="possibilities-explore-header">
           <div className="possibilities-container">
             <div className="possibilities-explore-header-content">
               <div>
-                <h2 className="possibilities-section-title">Explore Alternate Realities</h2>
+                <h2 className="possibilities-section-title">Explore alternate realities</h2>
                 <p className="possibilities-section-subtitle">Discover worlds fans have reimagined.</p>
-              </div>
-              <div className="possibilities-meta">
-                <span className="possibilities-count">Showing 16 possibilities</span>
-                <span className="possibilities-sort">Sort by: Newest</span>
               </div>
             </div>
 
@@ -109,53 +105,53 @@ export default function PossibilitiesPage() {
         <section className="possibilities-process-section">
           <div className="possibilities-container">
             <div className="possibilities-process-header">
-              <h2 className="possibilities-section-title">How Possibilities Come to Life</h2>
+              <h2 className="possibilities-section-title">How possibilities come to life</h2>
               <p className="possibilities-section-subtitle">From idea to immersive story.</p>
             </div>
 
             <div className="possibilities-process">
-              <div className="possibilities-process-step" tabIndex={0} role="button" aria-label="Step 1: An Idea Is Born">
+              <div className="possibilities-process-step" aria-label="Step 1: An Idea Is Born">
                 <div className="possibilities-process-icon">
                   <Lightbulb size={32} strokeWidth={2} />
                 </div>
                 <div className="possibilities-process-number">1</div>
-                <h3 className="possibilities-process-title">An Idea Is Born</h3>
+                <h3 className="possibilities-process-title">An idea is born</h3>
                 <p className="possibilities-process-description">A fan imagines a different path.</p>
               </div>
 
-              <div className="possibilities-process-step" tabIndex={0} role="button" aria-label="Step 2: Community Votes">
+              <div className="possibilities-process-step" aria-label="Step 2: Community Votes">
                 <div className="possibilities-process-icon">
                   <Users size={32} strokeWidth={2} />
                 </div>
                 <div className="possibilities-process-number">2</div>
-                <h3 className="possibilities-process-title">Community Votes</h3>
+                <h3 className="possibilities-process-title">Community votes</h3>
                 <p className="possibilities-process-description">The community supports the best ideas.</p>
               </div>
 
-              <div className="possibilities-process-step" tabIndex={0} role="button" aria-label="Step 3: Story Development">
+              <div className="possibilities-process-step" aria-label="Step 3: Story Development">
                 <div className="possibilities-process-icon">
                   <PenLine size={32} strokeWidth={2} />
                 </div>
                 <div className="possibilities-process-number">3</div>
-                <h3 className="possibilities-process-title">Story Development</h3>
+                <h3 className="possibilities-process-title">Story development</h3>
                 <p className="possibilities-process-description">Writers craft the alternate reality.</p>
               </div>
 
-              <div className="possibilities-process-step" tabIndex={0} role="button" aria-label="Step 4: Immersive Experience">
+              <div className="possibilities-process-step" aria-label="Step 4: Immersive Experience">
                 <div className="possibilities-process-icon">
                   <Orbit size={32} strokeWidth={2} />
                 </div>
                 <div className="possibilities-process-number">4</div>
-                <h3 className="possibilities-process-title">Immersive Experience</h3>
+                <h3 className="possibilities-process-title">Immersive experience</h3>
                 <p className="possibilities-process-description">Stories, visuals and products are created.</p>
               </div>
 
-              <div className="possibilities-process-step" tabIndex={0} role="button" aria-label="Step 5: You Explore It">
+              <div className="possibilities-process-step" aria-label="Step 5: You Explore It">
                 <div className="possibilities-process-icon">
                   <Sparkles size={32} strokeWidth={2} />
                 </div>
                 <div className="possibilities-process-number">5</div>
-                <h3 className="possibilities-process-title">You Explore It</h3>
+                <h3 className="possibilities-process-title">You explore it</h3>
                 <p className="possibilities-process-description">Step into a reality that could be.</p>
               </div>
             </div>

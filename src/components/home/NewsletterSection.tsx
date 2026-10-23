@@ -2,28 +2,52 @@
 
 import React, { useState } from 'react';
 import Container from '@/components/ui/Container';
-import { Send } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [feedbackMessage, setFeedbackMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simple email validation
+
+    const normalizedEmail = email.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!normalizedEmail || !emailRegex.test(normalizedEmail)) {
       setStatus('error');
+      setFeedbackMessage('Please enter a valid email address.');
       return;
     }
-    
-    // Mock success
-    setStatus('success');
-    setEmail('');
-    
-    // Reset after 3 seconds
-    setTimeout(() => setStatus('idle'), 3000);
+
+    setStatus('loading');
+    setFeedbackMessage('');
+
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: normalizedEmail }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data?.success) {
+        setStatus('success');
+        setFeedbackMessage(
+          data.message || 'Subscription request received and saved to our journey updates list.'
+        );
+        setEmail('');
+      } else {
+        setStatus('error');
+        setFeedbackMessage(data?.error || 'Unable to record subscription. Please try again.');
+      }
+    } catch {
+      setStatus('error');
+      setFeedbackMessage('Network connection error. Your email has been preserved—please retry.');
+    }
   };
 
   return (
@@ -37,17 +61,16 @@ export default function NewsletterSection() {
 
           {/* Left Side - Text */}
           <div className="relative z-10 flex-1">
-            <h2 
+            <h2
               className="text-3xl lg:text-4xl font-bold mb-3"
-              style={{ 
+              style={{
                 color: 'var(--text-primary)',
                 fontFamily: 'var(--font-stylish)',
                 fontStyle: 'italic',
               }}
-            >
-              Join Our Journey
+            >Join our journey
             </h2>
-            <p 
+            <p
               className="text-sm lg:text-base"
               style={{ color: 'var(--text-muted)' }}
             >
@@ -61,14 +84,17 @@ export default function NewsletterSection() {
               <div className="relative flex-1 lg:w-80">
                 <input
                   type="email"
+                  aria-label="Email address for journey updates"
+                  autoComplete="email"
                   value={email}
+                  disabled={status === 'loading'}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   className="w-full px-6 py-3 rounded-lg transition-all focus:outline-none focus:ring-2 newsletter-input"
                   required
                 />
                 {status === 'idle' && (
-                  <p 
+                  <p
                     className="absolute -bottom-6 left-0 text-xs"
                     style={{ color: 'var(--text-muted)' }}
                   >
@@ -78,23 +104,26 @@ export default function NewsletterSection() {
               </div>
               <button
                 type="submit"
-                className="px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 newsletter-submit"
+                disabled={status === 'loading'}
+                className="px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 newsletter-submit disabled:opacity-50"
               >
-                Join the Journey
+                {status === 'loading' ? 'Submitting...' : 'Join the journey'}
                 <Send className="w-4 h-4" />
               </button>
             </form>
-            
+
             {status === 'success' && (
-              <p className="mt-4 text-sm" style={{ color: 'var(--accent-orange)' }}>
-                ✓ Welcome aboard! Check your inbox.
-              </p>
+              <div className="mt-4 flex items-start gap-2 text-sm text-[var(--accent-orange)]" role="status" aria-live="polite">
+                <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <p>{feedbackMessage}</p>
+              </div>
             )}
-            
+
             {status === 'error' && (
-              <p className="mt-4 text-sm" style={{ color: 'var(--accent-red)' }}>
-                Please enter a valid email address.
-              </p>
+              <div className="mt-4 flex items-start gap-2 text-sm text-[var(--accent-red)]" role="alert">
+                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <p>{feedbackMessage}</p>
+              </div>
             )}
           </div>
         </div>

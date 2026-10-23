@@ -3,13 +3,12 @@
 import React from 'react';
 import { 
   Shirt, 
-  Lock, 
-  Truck, 
-  RefreshCw, 
   Heart,
   BadgeCheck,
   Sparkles,
   Gift,
+  ShieldCheck,
+  Compass,
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -69,7 +68,7 @@ export default function EssentialsPage() {
               <div className="essentials-feature">
                 <Gift className="essentials-feature-icon" strokeWidth={1.5} />
                 <div className="essentials-feature-content">
-                  <h3 className="essentials-feature-title">For You</h3>
+                  <h3 className="essentials-feature-title">For you</h3>
                   <p className="essentials-feature-description">For fans, by fans</p>
                 </div>
               </div>
@@ -102,16 +101,16 @@ export default function EssentialsPage() {
                   <span className="essentials-benefit-label">Handcrafted with Care</span>
                 </div>
                 <div className="essentials-benefit">
-                  <Lock className="essentials-benefit-icon" size={24} strokeWidth={2} />
-                  <span className="essentials-benefit-label">Secure & Trusted</span>
+                  <Sparkles className="essentials-benefit-icon" size={24} strokeWidth={2} />
+                  <span className="essentials-benefit-label">1-of-1 & Limited Concepts</span>
                 </div>
                 <div className="essentials-benefit">
-                  <Truck className="essentials-benefit-icon" size={24} strokeWidth={2} />
-                  <span className="essentials-benefit-label">Worldwide Shipping</span>
+                  <ShieldCheck className="essentials-benefit-icon" size={24} strokeWidth={2} />
+                  <span className="essentials-benefit-label">Transparent Specifications</span>
                 </div>
                 <div className="essentials-benefit">
-                  <RefreshCw className="essentials-benefit-icon" size={24} strokeWidth={2} />
-                  <span className="essentials-benefit-label">Easy Returns</span>
+                  <Compass className="essentials-benefit-icon" size={24} strokeWidth={2} />
+                  <span className="essentials-benefit-label">Maker Archive Discovery</span>
                 </div>
                 <div className="essentials-benefit">
                   <Heart className="essentials-benefit-icon" size={24} strokeWidth={2} />

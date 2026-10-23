@@ -1,15 +1,19 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Share2, MessageCircle, Copy, Mail, Globe } from 'lucide-react';
+import { Share2, MessageCircle, Copy, Check, Mail, Globe } from 'lucide-react';
 
 export default function CommunityShareSection() {
+  const [copied, setCopied] = useState(false);
+
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
     } catch {
-      // Fallback or silent fail
+      // Fallback
     }
   };
 
@@ -48,7 +52,7 @@ export default function CommunityShareSection() {
   return (
     <section className="build-community-section">
       <div className="build-community-panel build-community-story">
-        <h2 className="build-community-heading">HAVE A STORY?</h2>
+        <h2 className="build-community-heading">Have a story?</h2>
         <p className="build-community-text">
           The next build could be yours.
           <br />
@@ -62,7 +66,7 @@ export default function CommunityShareSection() {
       </div>
 
       <div className="build-community-panel build-community-share">
-        <h2 className="build-community-heading">SHARE THIS MOMENT</h2>
+        <h2 className="build-community-heading">Share this moment</h2>
         <p className="build-community-text">
           Love this build? Share it with
           <br />
@@ -103,11 +107,24 @@ export default function CommunityShareSection() {
           </button>
           <button
             type="button"
-            className="build-share-button"
+            className="build-share-button relative"
             onClick={() => handleShare('copy')}
-            aria-label="Copy link"
+            aria-label={copied ? 'Link copied' : 'Copy link'}
+            title={copied ? 'Copied!' : 'Copy link'}
           >
-            <Copy size={20} strokeWidth={2} />
+            {copied ? (
+              <Check size={20} strokeWidth={2.5} className="text-emerald-500" />
+            ) : (
+              <Copy size={20} strokeWidth={2} />
+            )}
+            {copied && (
+              <span
+                className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-0.5 text-xs font-bold rounded bg-emerald-600 text-white shadow-md pointer-events-none"
+                aria-live="polite"
+              >
+                Copied!
+              </span>
+            )}
           </button>
         </div>
       </div>

@@ -9,56 +9,56 @@ export default function ReturnsPage() {
       <Header />
       <main>
         <article className="interior-page">
-          <h1 className="interior-page-title">Returns & Exchanges</h1>
+          <h1 className="interior-page-title">Returns & exchanges</h1>
           
           <p className="interior-page-intro">
             Final return and exchange terms will be confirmed before physical AnimeStop collections become available.
           </p>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">ELIGIBLE REQUESTS</h2>
+            <h2 className="interior-page-section-title">Eligible requests</h2>
             <p>
               Future eligibility will depend on item condition, reason for request, and the time since original delivery. Detailed policies will be published when collections launch.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">DAMAGED OR INCORRECT ITEMS</h2>
+            <h2 className="interior-page-section-title">Damaged or incorrect items</h2>
             <p>
               Items that arrive damaged or incorrect should be reported as soon as possible. We will work with you to resolve the issue through replacement or refund.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">RETURNED ITEM CONDITION</h2>
+            <h2 className="interior-page-section-title">Returned item condition</h2>
             <p>
               Returns will generally require items to be in original condition with original packaging. Specific requirements will be clarified in the final policy.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">NON-ELIGIBLE REQUESTS</h2>
+            <h2 className="interior-page-section-title">Non-eligible requests</h2>
             <p>
               Certain items may not be eligible for return based on customization, limited availability, or other factors. These exceptions will be clearly communicated at the time of purchase.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">EXCHANGE REVIEW</h2>
+            <h2 className="interior-page-section-title">Exchange review</h2>
             <p>
               Exchange requests will be reviewed based on availability and the original reason for return. Approval is not guaranteed for all requests.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">REFUND PROCESS</h2>
+            <h2 className="interior-page-section-title">Refund process</h2>
             <p>
               Refund timing and methods will depend on the original payment method and processing requirements. Specific timelines will be provided in the final policy.
             </p>
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">REQUESTING SUPPORT</h2>
+            <h2 className="interior-page-section-title">Requesting support</h2>
             <p>
               For questions about returns or exchanges, contact AnimeStop support through the contact page.
             </p>

@@ -9,14 +9,14 @@ export default function MissionPage() {
       <Header />
       <main>
         <article className="interior-page">
-          <h1 className="interior-page-title">Our Mission</h1>
+          <h1 className="interior-page-title">Our mission</h1>
           
           <p className="interior-page-intro">
             AnimeStop exists to preserve the scenes, emotions and ideas that stay with anime fans long after an episode ends.
           </p>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">WHY WE BUILD</h2>
+            <h2 className="interior-page-section-title">Why we build</h2>
             <p>
               AnimeStop begins with meaningful scenes, lessons, emotions and fan memories rather than generic merchandise. Every concept should connect to a moment that resonated, a lesson that stayed, or an emotion that shaped how you see the world.
             </p>
@@ -26,7 +26,7 @@ export default function MissionPage() {
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">MEMORIES INTO FORM</h2>
+            <h2 className="interior-page-section-title">Memories into form</h2>
             <p>
               Selected stories may become original visual concepts, display pieces, editorial features, or future fan-led builds. Each concept is developed through research, symbolism, and careful attention to the emotional context that made the moment meaningful.
             </p>
@@ -36,7 +36,7 @@ export default function MissionPage() {
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">BUILT WITH FANS</h2>
+            <h2 className="interior-page-section-title">Built with fans</h2>
             <p>
               Fans can share the moments and ideas that matter to them. While we cannot promise that every submission will be produced, each story helps us understand what resonates most deeply with the anime community.
             </p>
@@ -46,7 +46,7 @@ export default function MissionPage() {
           </section>
 
           <section className="interior-page-section">
-            <h2 className="interior-page-section-title">A COLLECTION WITH MEANING</h2>
+            <h2 className="interior-page-section-title">A collection with meaning</h2>
             <p>
               Every future build should remain connected to a story, memory, or emotional reason. We do not create products for the sake of filling shelves. Each piece should carry weight, intention, and respect for the moment that inspired it.
             </p>

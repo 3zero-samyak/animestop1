@@ -7,8 +7,17 @@ import Container from '@/components/ui/Container';
 export default function StoriesHero() {
   return (
     <section className="page-hero relative min-h-[600px] lg:min-h-[700px]" style={{ backgroundColor: 'var(--page-bg)' }} data-mode-image-container>
-      {/* Background Image */}
-      <div className="page-hero-media absolute inset-0 z-0" style={{ backgroundColor: 'var(--surface-secondary)' }} />
+      {/* Background Image using existing asset */}
+      <div 
+        className="page-hero-media absolute inset-0 z-0 mode-sensitive-background"
+        data-mode-sensitive-background="true"
+        style={{
+          backgroundImage: 'url(/images/hero/stories-image.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundColor: 'var(--surface-secondary)',
+        }}
+      />
       
       {/* Gradient overlay for text readability */}
       <div className="page-hero-overlay media-overlay-left" aria-hidden="true" />

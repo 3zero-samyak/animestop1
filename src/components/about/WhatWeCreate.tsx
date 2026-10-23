@@ -12,7 +12,7 @@ const categories = [
     description: 'Objects designed to carry a little piece of the anime world into everyday life.',
     link: '/essentials',
     linkText: 'Explore Essentials',
-    color: '#F06A32',
+    color: '#70dfd0',
   },
   {
     id: 'stories',
@@ -20,7 +20,7 @@ const categories = [
     description: 'Builds inspired by scenes, emotions and lessons that stay with us.',
     link: '/stories',
     linkText: 'Explore Stories',
-    color: '#E84A4A',
+    color: '#f29dc5',
   },
   {
     id: 'possibilities',
@@ -28,7 +28,7 @@ const categories = [
     description: 'Alternate realities, what-if concepts and ideas beyond the original story.',
     link: '/possibilities',
     linkText: 'Explore Possibilities',
-    color: '#8B5CF6',
+    color: '#b6a0ff',
   },
   {
     id: 'vault',
@@ -36,7 +36,7 @@ const categories = [
     description: 'Rare, ambitious and experimental builds preserved as part of the AnimeStop archive.',
     link: '/vault',
     linkText: 'Enter The Vault',
-    color: '#D6A34A',
+    color: '#f4d482',
   },
 ];
 
@@ -44,7 +44,7 @@ export default function WhatWeCreate() {
   return (
     <section className="about-section">
       <ScrollReveal>
-        <h2 className="about-section-title">What We Create</h2>
+        <h2 className="about-section-title">What we create</h2>
         <p className="about-section-subtitle">
           Ideas inspired by the moments anime fans remember.
         </p>

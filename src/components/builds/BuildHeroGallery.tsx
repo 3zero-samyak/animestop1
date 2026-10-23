@@ -137,7 +137,7 @@ export default function BuildHeroGallery({ build }: { build: BuildDetail }) {
         )}
 
         {/* Right: Large Display */}
-        <div className="build-hero-display">
+        <div className="build-hero-display" data-mode-image-container>
           {activeMedia?.src ? (
             activeMedia.type === 'video' ? (
               <video

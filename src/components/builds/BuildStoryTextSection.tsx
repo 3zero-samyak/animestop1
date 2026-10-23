@@ -14,7 +14,7 @@ export default function BuildStoryTextSection({ build }: { build: BuildDetail })
   return (
     <section className="build-story-section">
       <div className="build-story-container">
-        <h2 className="build-section-heading">THE STORY BEHIND THIS BUILD</h2>
+        <h2 className="build-section-heading">The story behind this build</h2>
         
         <div className="build-story-content">
           {paragraphs.map((paragraph, i) => (

@@ -10,7 +10,13 @@ export type AuthToastMessage = {
 };
 
 export function isSafeInternalDestination(value: string | null | undefined): value is string {
-  return !!value && value.startsWith('/') && !value.startsWith('//');
+  return (
+    !!value &&
+    value.startsWith('/') &&
+    !value.startsWith('//') &&
+    !value.startsWith('/\\') &&
+    !value.includes('\\')
+  );
 }
 
 export function getSafeReturnTo(value: string | null | undefined, fallback = '/account') {

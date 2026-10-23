@@ -24,7 +24,7 @@ interface StoryDraft {
   updatedAt: string;
 }
 
-const DRAFT_KEY = 'animestop-story-draft';
+const getDraftKey = (uid?: string) => (uid ? `animestop-story-draft:${uid}` : 'animestop-story-draft');
 
 const CATEGORIES = [
   'Anime',
@@ -72,7 +72,7 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
         updatedAt: new Date().toISOString(),
       };
       
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      localStorage.setItem(getDraftKey(user.uid), JSON.stringify(draft));
       
       if (showNotification) {
         setDraftSaveStatus('Draft saved locally');
@@ -95,7 +95,7 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
 
   const discardDraft = () => {
     try {
-      localStorage.removeItem(DRAFT_KEY);
+      localStorage.removeItem(getDraftKey(user?.uid));
     } catch {}
     setSavedDraft(null);
     setShowDraftPrompt(false);
@@ -106,7 +106,7 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
     if (!user || draftChecked) return;
     
     try {
-      const raw = localStorage.getItem(DRAFT_KEY);
+      const raw = localStorage.getItem(getDraftKey(user.uid));
       if (raw) {
         const draft = JSON.parse(raw) as StoryDraft;
         if (draft.authorEmail === user.email) {
@@ -199,7 +199,7 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
       await submitStory({ title, category, body, storyIntent: storyIntent.trim(), requestedVisibility, publicationConsent });
 
       // Clear local draft after successful remote submission
-      try { localStorage.removeItem(DRAFT_KEY); } catch {}
+      try { localStorage.removeItem(getDraftKey(user.uid)); } catch {}
 
       setSubmitted(true);
     } catch (err: unknown) {
@@ -264,7 +264,7 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
       <div className="share-story-page">
         <ScrollReveal>
           <div className="share-story-success">
-            <h1 className="share-story-success-title">STORY SUBMITTED</h1>
+            <h1 className="share-story-success-title">Story submitted</h1>
             <p className="share-story-success-text">
               Thank you for sharing this moment with AnimeStop.
             </p>
@@ -313,7 +313,7 @@ export default function ShareStoryForm({ user }: ShareStoryFormProps) {
       </ScrollReveal>
 
       <ScrollReveal delay={100}>
-        <h1 className="share-story-title">SHARE YOUR STORY</h1>
+        <h1 className="share-story-title">Share your story</h1>
       </ScrollReveal>
 
       <ScrollReveal delay={200}>

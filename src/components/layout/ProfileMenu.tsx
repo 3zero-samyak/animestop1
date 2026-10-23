@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/AuthProvider';
 import { User as UserIcon } from 'lucide-react';
@@ -10,32 +11,41 @@ export default function ProfileMenu() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const btnRef = useRef<HTMLButtonElement | null>(null);
-  const panelRef = useRef<HTMLDivElement | null>(null);
 
+  // Close dropdown on outside click or Escape key when open
   useEffect(() => {
-    const onDoc = (e: MouseEvent) => {
-      if (!open) return;
-      if (panelRef.current && btnRef.current && !panelRef.current.contains(e.target as Node) && !btnRef.current.contains(e.target as Node)) {
+    if (!open) return;
+
+    const onDocClick = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
     };
 
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpen(false);
+        btnRef.current?.focus();
+      }
     };
 
-    document.addEventListener('mousedown', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onKeyDown);
     return () => {
-      document.removeEventListener('mousedown', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onKeyDown);
     };
   }, [open]);
 
-  const openTo = (href: string) => {
-    setOpen(false);
-    router.push(href);
+  // Close dropdown when focus leaves the profile container
+  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setOpen(false);
+    }
   };
 
   const openAuthPage = (view?: 'create') => {
@@ -72,28 +82,32 @@ export default function ProfileMenu() {
   };
 
   return (
-    <div className="profile-menu-root" style={{ position: 'relative' }}>
+    <div
+      ref={containerRef}
+      className="profile-menu-root"
+      onBlur={handleBlur}
+      style={{ position: 'relative' }}
+    >
       <button
         ref={btnRef}
         type="button"
+        id="profile-menu-trigger"
         className="site-header-icon-button profile-icon-button"
-        aria-haspopup="true"
         aria-expanded={open}
+        aria-controls="profile-menu-panel"
         aria-label={open ? 'Close profile menu' : 'Open profile menu'}
         onClick={() => setOpen((s) => !s)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            setOpen((s) => !s);
-          }
-        }}
       >
         {/* Avatar when logged in, otherwise generic user icon */}
         {user ? (
           <div
             aria-hidden
             className="w-8 h-8 rounded-full flex items-center justify-center font-semibold"
-            style={{ backgroundColor: 'var(--elevated-bg)', color: 'var(--text-primary)', border: '1px solid var(--border-card)' }}
+            style={{
+              backgroundColor: 'var(--elevated-bg)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border-card)',
+            }}
           >
             {avatarLetter()}
           </div>
@@ -103,10 +117,9 @@ export default function ProfileMenu() {
       </button>
 
       {open && (
-        <div
-          ref={panelRef}
-          role="menu"
-          aria-label="Profile menu"
+        <nav
+          id="profile-menu-panel"
+          aria-label="Profile navigation"
           className="profile-menu-panel"
           style={{
             position: 'absolute',
@@ -135,34 +148,62 @@ export default function ProfileMenu() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: 8 }}>
             {user ? (
               <>
-                <button type="button" className="profile-menu-item" onClick={() => openTo('/account')} aria-label="Account">
+                <Link
+                  href="/account"
+                  className="profile-menu-item"
+                  onClick={() => setOpen(false)}
+                >
                   Account
-                </button>
-                <button type="button" className="profile-menu-item" onClick={() => openTo('/account/saved')} aria-label="My saved items">
+                </Link>
+                <Link
+                  href="/account/saved"
+                  className="profile-menu-item"
+                  onClick={() => setOpen(false)}
+                >
                   My Saved Items
-                </button>
-                <button type="button" className="profile-menu-item" onClick={() => openTo('/journal/write')} aria-label="Write Journal">
+                </Link>
+                <Link
+                  href="/journal/write"
+                  className="profile-menu-item"
+                  onClick={() => setOpen(false)}
+                >
                   Write Journal
-                </button>
-                <button type="button" className="profile-menu-item" onClick={() => openTo('/share-story')} aria-label="Share Story">
+                </Link>
+                <Link
+                  href="/share-story"
+                  className="profile-menu-item"
+                  onClick={() => setOpen(false)}
+                >
                   Share Story
-                </button>
-                <button type="button" className="profile-menu-item" onClick={handleLogout} aria-label="Logout">
+                </Link>
+                <button
+                  type="button"
+                  className="profile-menu-item text-left"
+                  onClick={handleLogout}
+                >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <button type="button" className="profile-menu-item" onClick={() => openAuthPage()} aria-label="Sign in">
+                <button
+                  type="button"
+                  className="profile-menu-item text-left"
+                  onClick={() => openAuthPage()}
+                >
                   Sign In
                 </button>
-                <button type="button" className="profile-menu-item" onClick={() => openAuthPage('create')} aria-label="Create account">
+                <button
+                  type="button"
+                  className="profile-menu-item text-left"
+                  onClick={() => openAuthPage('create')}
+                >
                   Create Account
                 </button>
               </>
             )}
           </div>
-        </div>
+        </nav>
       )}
     </div>
   );

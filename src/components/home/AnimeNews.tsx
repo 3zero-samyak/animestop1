@@ -12,7 +12,7 @@ export default async function AnimeNews() {
       <Container size="large" className="anime-news-container">
         <div className="anime-news-header">
           <div>
-            <h2 className="anime-news-heading">ANIME NEWS</h2>
+            <h2 className="anime-news-heading">Anime news</h2>
             <p className="anime-news-subheading">Latest updates from the anime world</p>
           </div>
         </div>
@@ -54,7 +54,7 @@ export default async function AnimeNews() {
           </div>
         ) : (
           <div className="collection-browser-empty" role="status">
-            <h3 className="collection-browser-empty-heading">NEWS CURRENTLY UNAVAILABLE</h3>
+            <h3 className="collection-browser-empty-heading">News currently unavailable</h3>
             <p className="collection-browser-empty-copy">External anime news feeds are temporarily unavailable. Please check back soon.</p>
           </div>
         )}

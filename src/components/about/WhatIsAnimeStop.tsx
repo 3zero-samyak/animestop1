@@ -7,7 +7,7 @@ export default function WhatIsAnimeStop() {
   return (
     <section className="about-section">
       <ScrollReveal>
-        <h2 className="about-section-title">What Is AnimeStop?</h2>
+        <h2 className="about-section-title">What is AnimeStop?</h2>
       </ScrollReveal>
 
       <ScrollReveal delay={100}>

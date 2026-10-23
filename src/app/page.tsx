@@ -13,10 +13,10 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main>
+      <main className="home-page">
         <HeroSection />
-        <WhatIsAnimeStop />
         <ExploreCollections />
+        <WhatIsAnimeStop />
         <HowItWorks />
         <MemoryWall />
         <CommunitySection />

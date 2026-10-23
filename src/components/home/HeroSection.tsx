@@ -1,157 +1,47 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import Button from '@/components/ui/Button';
-import { ChevronDown, Search } from 'lucide-react';
-
-const HERO_IMAGES: string[] = [
-  '/images/hero/hero-1.png',
-  '/images/hero/hero-2.png',
-  '/images/hero/hero-3.png',
-  '/images/hero/hero-4.png',
-  '/images/hero/hero-5.png',
-];
+import ModeImage from '@/components/media/ModeImage';
 
 export default function HeroSection() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [imagesReady, setImagesReady] = useState(false);
-
-  useEffect(() => {
-    // Preload images
-    const preloadImages = async () => {
-      const imagePromises = HERO_IMAGES.map((src) => {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = resolve;
-          img.onerror = reject;
-          img.src = src;
-        });
-      });
-      
-      try {
-        await Promise.all(imagePromises);
-        setImagesReady(true);
-      } catch {
-        console.log('Hero images loading...');
-      }
-    };
-    
-    preloadImages();
-    
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+  const handleSearchSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const query = searchQuery.trim();
+    if (query) router.push(`/stories?q=${encodeURIComponent(query)}`);
+  };
   return (
-    <section className="page-hero relative" style={{ backgroundColor: 'var(--background)' }} data-mode-image-container>
-      {/* Full-Width Background Slideshow */}
-      <div className="page-hero-media absolute inset-0 z-0" aria-hidden="true">
-        {HERO_IMAGES.map((image, index) => (
-          <div
-            key={image}
-            className="absolute inset-0 transition-opacity duration-1000 mode-sensitive-background"
-            data-mode-sensitive-background="true"
-            style={{
-              opacity: imagesReady && currentImageIndex === index ? 1 : 0,
-              backgroundImage: `url(${image})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          />
-        ))}
-        {/* Fallback gradient */}
-        {!imagesReady && (
-          <div 
-            className="absolute inset-0 bg-gradient-to-br"
-            style={{
-              backgroundColor: 'var(--surface-primary)',
-            }}
-          />
-        )}
-      </div>
-
-      {/* Dark overlay for text readability */}
-      <div className="page-hero-overlay media-overlay-left" />
-
-      {/* Hero Main Content */}
-      <div className="page-hero-content relative z-10">
-        <Container size="large" className="page-hero-inner">
-          <div className="page-hero-copy">
-            {/* Quote Mark */}
-            <div className="page-hero-quote-mark media-accent" aria-hidden="true">&ldquo;</div>
-
-            {/* Quote - explicit line grouping */}
-            <blockquote className="page-hero-quote">
-              <span>Some stories never end.</span>
-              <span>They just become</span>
-              <span>part of us.</span>
-            </blockquote>
-
-            {/* Attribution */}
-            <div className="page-hero-attribution">— AnimeStop</div>
-
-            {/* Supporting Text */}
-            <p className="page-hero-supporting">We build those moments.</p>
-
-            {/* CTA Button */}
-            <div className="page-hero-cta">
-              <Button variant="outline" size="lg" href="#search">
-                Begin Your Journey →
-              </Button>
-            </div>
+    <section className="discovery-hero" aria-labelledby="home-title">
+      <Container size="large" className="discovery-hero-grid">
+        <div className="discovery-hero-copy">
+          <p className="section-kicker"><Sparkles size={15} aria-hidden="true" /> A little anime. A whole lot of feeling.</p>
+          <h1 id="home-title">Some stories become <span>part of your world.</span></h1>
+          <p className="discovery-hero-description">We turn the moments you love into miniature worlds, meaningful objects, and stories worth sharing. Made by fans, with feeling.</p>
+          <div className="discovery-hero-actions">
+            <Button href="#collections" size="lg">Find your next favourite <ArrowRight size={19} aria-hidden="true" /></Button>
+            <Link href="/studio" className="discovery-studio-link">Inside the studio <ArrowRight size={17} aria-hidden="true" /></Link>
           </div>
-        </Container>
-      </div>
-
-      {/* Hero Bottom Controls */}
-      <div className="page-hero-content relative z-10 pb-16 lg:pb-20">
-        <Container size="large">
-          <div className="grid lg:grid-cols-12 gap-8 items-end max-w-full media-content">
-            {/* Scroll Indicator */}
-            <div className="lg:col-span-2 flex flex-col items-center lg:items-start gap-2">
-              <span 
-                className="text-sm tracking-wider uppercase media-muted"
-              >
-                Scroll
-              </span>
-              <div className="animate-bounce">
-                <ChevronDown 
-                  className="w-6 h-6"
-                  style={{ color: 'var(--media-text-muted)' }}
-                />
-              </div>
-            </div>
-
-            {/* Large Search Bar - Full Width */}
-            <div className="lg:col-span-10">
-              <form className="relative w-full">
-                <Search 
-                  className="absolute left-6 top-1/2 transform -translate-y-1/2 w-6 h-6 pointer-events-none z-10"
-                  style={{ color: 'var(--media-text-muted)' }}
-                />
-                <input
-                  id="search"
-                  type="text"
-                  placeholder="Search for anime, characters, or themes..."
-                  className="w-full px-6 py-5 pl-16 text-lg rounded-[var(--radius-xl)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-orange)] transition-all"
-                  style={{ 
-                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                    color: 'var(--media-text-primary)',
-                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                    maxWidth: '100%',
-                  }}
-                />
-              </form>
-            </div>
-          </div>
-        </Container>
-      </div>
+          <form onSubmit={handleSearchSubmit} className="discovery-search" role="search">
+            <Search size={20} aria-hidden="true" />
+            <label htmlFor="hero-search-input" className="sr-only">Search anime, characters, or moments</label>
+            <input id="hero-search-input" type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Find your anime, character, or moment" />
+            <button type="submit" aria-label="Search stories" disabled={!searchQuery.trim()}><ArrowRight size={19} aria-hidden="true" /></button>
+          </form>
+          <div className="discovery-hero-footnote"><span aria-hidden="true" className="colour-dots"><i /><i /><i /><i /></span> Original creations. Endless inspiration.</div>
+        </div>
+        <div className="discovery-art" data-mode-image-container>
+          <div className="discovery-art-image"><ModeImage src="/images/hero/hero-1.png" alt="A cinematic anime-inspired world, full of light and imagination" fill priority sizes="(max-width: 850px) 100vw, 50vw" style={{ objectFit: 'cover' }} /></div>
+          <span className="discovery-art-tag"><Sparkles size={15} aria-hidden="true" /> The things that stay with us</span>
+          <div className="discovery-art-caption"><span>From a favourite scene</span><strong>to something you can hold.</strong><Link href="/stories" aria-label="Explore scene-inspired stories"><ArrowRight size={22} aria-hidden="true" /></Link></div>
+          <span className="discovery-art-sticker" aria-hidden="true">Made of<br />memories ✦</span>
+        </div>
+      </Container>
     </section>
   );
 }

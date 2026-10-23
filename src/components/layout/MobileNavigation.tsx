@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
@@ -18,7 +18,6 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -43,14 +42,6 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
       document.body.style.paddingRight = '';
     };
   }, [isOpen]);
-
-  // Detect mobile vs desktop for drawer content
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 899);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
 
   // Focus management
   useEffect(() => {
@@ -106,7 +97,6 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
   const handleNavigation = (href: string) => {
     onClose();
     router.push(href);
-    // Scroll to top after navigation
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 100);
@@ -153,31 +143,30 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
 
         <nav className="navigation-drawer-nav" aria-label="Main navigation">
           <ul className="navigation-drawer-list">
-            {(isMobile ? siteNavigation : siteNavigation.filter(i => ['home','about','login'].includes(i.id))).map((item) => {
+            {siteNavigation.map((item) => {
               const active = isActive(item.href);
-                // If this is the login entry, adapt label/href when user is authenticated
-                let href = item.href;
-                let label = item.label;
-                
-                if (item.id === 'login' && user) {
-                  href = '/account';
-                  label = 'Account';
-                }
+              let href = item.href;
+              let label = item.label;
+              
+              if (item.id === 'login' && user) {
+                href = '/account';
+                label = 'Account';
+              }
               
               return (
                 <li key={item.id}>
-                    <Link
-                      href={href}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleNavigation(href);
-                      }}
-                      className="navigation-drawer-link"
-                      data-current={active}
-                      aria-current={active ? 'page' : undefined}
-                    >
-                      {label}
-                    </Link>
+                  <Link
+                    href={href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation(href);
+                    }}
+                    className="navigation-drawer-link"
+                    data-current={active}
+                    aria-current={active ? 'page' : undefined}
+                  >
+                    {label}
+                  </Link>
                 </li>
               );
             })}
@@ -207,4 +196,3 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
     </>
   );
 }
-

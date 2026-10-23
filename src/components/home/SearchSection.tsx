@@ -12,8 +12,7 @@ export default function SearchSection() {
             <h2 
               className="text-3xl md:text-4xl font-stylish mb-3"
               style={{ color: 'var(--text-primary)' }}
-            >
-              Find Your Next Story
+            >Find your next story
             </h2>
             <p 
               className="text-lg"

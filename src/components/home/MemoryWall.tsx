@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
+import Link from 'next/link';
 import Container from '@/components/ui/Container';
 import { Heart, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
@@ -39,7 +40,7 @@ export default function MemoryWall() {
   };
 
   return (
-    <section className="py-16 lg:py-20" style={{ backgroundColor: 'var(--page-bg)' }}>
+    <section className="memory-wall-section py-16 lg:py-20" style={{ backgroundColor: 'var(--page-bg)' }}>
       <Container size="large">
         {/* Section Header */}
         <div className="flex items-start justify-between mb-8 lg:mb-12">
@@ -52,10 +53,9 @@ export default function MemoryWall() {
                   fontFamily: 'var(--font-stylish)',
                   fontStyle: 'italic',
                 }}
-              >
-                MEMORY WALL
+              >Memory wall
               </h2>
-              <Heart className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />
+              <Heart className="w-5 h-5 text-[var(--accent-primary)]" />
             </div>
             <p 
               className="text-sm lg:text-base"
@@ -64,13 +64,14 @@ export default function MemoryWall() {
               Because every memory deserves a place.
             </p>
           </div>
-          <button 
-            className="hidden lg:flex items-center gap-2 text-sm transition-colors hover:opacity-80"
+          <Link 
+            href="/share-story"
+            className="flex items-center gap-2 text-sm font-semibold transition-colors hover:text-[var(--accent-primary)]"
             style={{ color: 'var(--text-muted)' }}
           >
             Share your memory
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
 
         {/* Scrollable Memory Cards */}
@@ -78,10 +79,10 @@ export default function MemoryWall() {
           {/* Left Arrow */}
           <button
             onClick={() => scroll('left')}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-0 group-hover/carousel:opacity-100 hover:scale-110"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-80 sm:opacity-0 sm:group-hover/carousel:opacity-100 focus-visible:opacity-100 hover:scale-110"
             style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.6)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              backgroundColor: 'var(--surface-primary)',
+              border: '1px solid var(--border-color)',
               color: 'var(--text-primary)',
             }}
             aria-label="Scroll left"
@@ -101,20 +102,20 @@ export default function MemoryWall() {
             {memories.map((memory) => (
               <div
                 key={memory.id}
-                className="flex-shrink-0 w-[320px] lg:w-[380px] rounded-xl p-8 transition-all duration-300 hover:scale-[1.02]"
+                className="memory-card flex-shrink-0 w-[320px] lg:w-[380px] rounded-xl p-8 transition-all duration-300 hover:scale-[1.02]"
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  backgroundColor: 'var(--surface-primary)',
+                  border: '1px solid var(--border-color)',
                 }}
               >
                 {/* Quote Badge */}
                 <div 
                   className="w-10 h-10 rounded-full flex items-center justify-center mb-6"
                   style={{
-                    backgroundColor: 'rgba(220, 101, 52, 0.15)',
+                    backgroundColor: 'var(--accent-soft)',
                   }}
                 >
-                  <Heart className="w-5 h-5" style={{ color: 'var(--accent-orange)' }} />
+                  <Heart className="w-5 h-5 text-[var(--accent-primary)]" />
                 </div>
                 
                 {/* Quote Text */}
@@ -132,9 +133,9 @@ export default function MemoryWall() {
                 
                 {/* Author */}
                 <p 
-                  className="text-sm"
+                  className="text-sm font-semibold"
                   style={{ 
-                    color: 'var(--accent-orange)',
+                    color: 'var(--accent-primary)',
                     fontStyle: 'italic',
                   }}
                 >
@@ -147,10 +148,10 @@ export default function MemoryWall() {
           {/* Right Arrow */}
           <button
             onClick={() => scroll('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-0 group-hover/carousel:opacity-100 hover:scale-110"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-80 sm:opacity-0 sm:group-hover/carousel:opacity-100 focus-visible:opacity-100 hover:scale-110"
             style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.6)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              backgroundColor: 'var(--surface-primary)',
+              border: '1px solid var(--border-color)',
               color: 'var(--text-primary)',
             }}
             aria-label="Scroll right"

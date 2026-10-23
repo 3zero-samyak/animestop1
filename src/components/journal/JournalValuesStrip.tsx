@@ -4,10 +4,10 @@ import React from 'react';
 import { BookOpen, MessageSquare, FileText, Users } from 'lucide-react';
 
 const items = [
-  { title: 'REAL STORIES', subtitle: 'From fans and creators.', Icon: BookOpen },
-  { title: 'DEEP REFLECTIONS', subtitle: 'Thoughts that inspire.', Icon: MessageSquare },
-  { title: 'CREATOR INSIGHTS', subtitle: 'Behind-the-scenes and more.', Icon: FileText },
-  { title: 'COMMUNITY VOICES', subtitle: "Your stories matter.", Icon: Users },
+  { title: 'Real stories', subtitle: 'From fans and creators.', Icon: BookOpen },
+  { title: 'Deep reflections', subtitle: 'Thoughts that inspire.', Icon: MessageSquare },
+  { title: 'Creator insights', subtitle: 'Behind-the-scenes and more.', Icon: FileText },
+  { title: 'Community voices', subtitle: "Your stories matter.", Icon: Users },
 ];
 
 export default function JournalValuesStrip() {
